@@ -3,11 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { FirebaseAppProvider } from 'reactfire';
+import firebaseConfig from './services/firebaseConfig.js';
+import UserProvider from './providers/userProvider.js';
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+    <React.StrictMode>
+      {/* <UserProvider> */}
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+      {/* </UserProvider> */}
+    </React.StrictMode>
+  </FirebaseAppProvider>,
   document.getElementById('root')
 );
 
