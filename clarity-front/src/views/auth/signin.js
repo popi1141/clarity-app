@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Copyright from '../copyright/copyright.js';
+import Copyright from '../../components/copyright/copyright.js';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from 'reactfire';
 import Alert from '@material-ui/lab/Alert';
 
@@ -22,7 +22,7 @@ import Alert from '@material-ui/lab/Alert';
 const SignIn = () => {
     const classes = useStyles();
 
-    const history = useHistory();
+    const navigate = useNavigate();  
     // User State
     const [user, setUser] = useState({
         email: '',
@@ -55,10 +55,7 @@ const SignIn = () => {
                     })
                     firebase.auth().signOut();
                 }
-                history.push({
-                    pathname: '/dashboard',
-                    search: `/?user=${result.user.uid}?name=${result.user.displayName}`,
-                })
+                navigate('/dashboard')
             })
             .catch(error => {
                 // Update the error
