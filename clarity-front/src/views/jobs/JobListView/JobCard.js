@@ -11,7 +11,8 @@ import {
   Typography,
   Chip,
   Collapse,
-  makeStyles
+  makeStyles,
+  SvgIcon
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -19,6 +20,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import svg from '../../../assets/push-pin.svg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,10 +39,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ className, job, ...rest }) => {
+const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityChangeToHigh, ...props }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false)
   const [notifsOn, setNotifsOn] = useState(false)
+  const [priorityStatus, setPriority] = useState(job.priority)
 
   const handleClick = () => {
     setOpen(!open);
@@ -51,17 +54,37 @@ const ProductCard = ({ className, job, ...rest }) => {
     setNotifsOn(!notifsOn);
   };
 
+  const calculateTimeDiff = (postedDate) => {
+    const currDate = new Date()
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const diffDays = Math.round(Math.abs((currDate - postedDate) / oneDay));
+    return diffDays
+  }
+
+  const changePriority = () => {
+    console.log(i)
+
+    if (priorityStatus) {
+      handlePriorityChangeToReg(i)
+    } else {
+      handlePriorityChangeToHigh(i)
+    }
+    setPriority(!priorityStatus)
+  }
+
   return (
     <Card
       className={clsx(classes.root, className)}
-      {...rest}
+      {...props}
     >
       <CardContent >
         <Box
           display="flex">
 
           <Box m={5}>
-            <CreateIcon className={classes.createIcon} />
+            <SvgIcon style={{ color:  priorityStatus ? 'black' : 'gray' }} onClick={changePriority} >
+            <path d="M19.083 1c0 1.018-1.424 1.907-3.541 2.382V11c2.926.652 4.958 2.086 4.958 3.751h-7.792V23h-1.416v-8.25H3.5c0-1.665 2.032-3.1 4.958-3.751V3.382C6.341 2.907 4.917 2.018 4.917 1h14.166zs" />
+            </SvgIcon>
           </Box>
           <Box
             display="flex"
@@ -102,8 +125,9 @@ const ProductCard = ({ className, job, ...rest }) => {
                   className={classes.statsItem}
                   item
                 >
-                  <Chip label={'Deadline: ' + job.deadline} />
-                  <Chip label={'Posted: ' + job.postedDate} />
+                  <Chip label={'Deadline: ' + job.deadline.toDate().toLocaleString('default', { month: 'long' }) + ' '
+                    + job.deadline.toDate().getDate() + ', ' + job.deadline.toDate().getFullYear()} />
+                  <Chip label={'Posted: ' + calculateTimeDiff(job.postedDate.toDate()) + ' days ago'} />
                   <Chip label={job.progress} />
 
                 </Grid>
@@ -201,7 +225,7 @@ const ProductCard = ({ className, job, ...rest }) => {
           </Box>
         </Box>
       </Collapse>
-    </Card>
+    </Card >
   );
 };
 

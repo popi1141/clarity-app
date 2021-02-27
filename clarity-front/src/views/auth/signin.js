@@ -55,7 +55,8 @@ const SignIn = () => {
                     })
                     firebase.auth().signOut();
                 }
-                navigate('/dashboard')
+                localStorage.setItem("uid", firebase.auth().currentUser.uid)
+                navigate('/app/dashboard')
             })
             .catch(error => {
                 // Update the error

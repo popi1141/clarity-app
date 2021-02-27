@@ -19,7 +19,6 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: 'account', element: <AccountView /> },
-      { path: 'jobs', element: <JobListView /> },
       { path: 'dashboard', element: <JobListView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
@@ -34,7 +33,7 @@ const routes = [
       { path: 'logout', element: <SignOut /> },
       { path: 'passwordreset', element: <PasswordReset /> },
       { path: '404', element: <NotFoundView /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '/', element: <Navigate to="/login" /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

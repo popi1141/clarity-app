@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import NavBar from './navBar';
 import TopBar from './topBar';
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
