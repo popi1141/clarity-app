@@ -11,10 +11,8 @@ import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 //import Toolbar from './Toolbar';
 import JobCard from './JobCard';
-import data from './data';
-import firebase from '@firebase/app';
-import '@firebase/firestore'
-import '@firebase/auth';
+
+import PushPin from '../../../assets/PushPin.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,83 +21,19 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3)
   },
-  productCard: {
+  jobCard: {
     height: '100%'
   }
 }));
 
-const JobListView = () => {
+const JobListView = ({
+  handlePriorityChangeToHigh,
+  handlePriorityChangeToReg,
+  highPriorityJobs,
+  regPriorityJobs
+}) => {
   const classes = useStyles();
-  const [jobs, setJobs] = useState([]);
-  const [highPriorityJobs, sethighPriorityJobs] = useState([]);
-  const [regPriorityJobs, setregPriorityJobs] = useState([]);
-
-  const uid = localStorage.getItem("uid")
-
-  const handlePriorityChangeToHigh = (id) => {
-    const dataUpdate = [...highPriorityJobs];
-    dataUpdate[id] = regPriorityJobs[id];
-    dataUpdate[id].priority = true
-    sethighPriorityJobs([...dataUpdate]);
-
-    const dataDelete = [...regPriorityJobs];
-    dataDelete.splice(id, 1);
-    setregPriorityJobs([...dataDelete]);
-
-  }
-
-  const handlePriorityChangeToReg = (id) => {
-    const dataUpdate = [...regPriorityJobs];
-    dataUpdate[id] = highPriorityJobs[id];
-    dataUpdate[id].priority = false
-    setregPriorityJobs([...dataUpdate]);
-
-    const dataDelete = [...highPriorityJobs];
-    dataDelete.splice(id, 1);
-    sethighPriorityJobs([...dataDelete]);
-  }
-
-  const getUserData = async () => {
-    try {
-      const documentSnapshot = await firebase.firestore()
-        .collection('users')
-        .doc(uid)
-        .get();
-
-      const userData = documentSnapshot.data();
-
-      localStorage.setItem("userData", userData)
-      const boards = userData.boards;
-
-      boards.map((board) => {
-        board.cards.map((card) => {
-          console.log(card)
-          //const newArray = [...jobs, card];
-          //setJobs(newArray);
-
-          if (card.priority) {
-            const newArray = [...highPriorityJobs, card];
-            sethighPriorityJobs(newArray)
-          } else {
-            const newArray = [...regPriorityJobs, card];
-            setregPriorityJobs(newArray)
-          }
-
-
-        })
-      })
-
-      console.log(jobs)
-
-    } catch {
-      //do whatever
-    }
-  };
-
-  // Get user on mount
-  useEffect(() => {
-    getUserData();
-  }, []);
+  
 
   return (
     <Page
@@ -117,14 +51,14 @@ const JobListView = () => {
         </Typography>
         <Box mt={3}>
           {highPriorityJobs.map((job, i) => {
-            console.log(i)
-            return(<JobCard
-              className={classes.productCard}
+            return (<JobCard
+              className={classes.jobCard}
               job={job}
               i={i}
-              handlePriorityChangeToReg={handlePriorityChangeToReg}
-              handlePriorityChangeToHigh={handlePriorityChangeToHigh}
-            />)})}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(i)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(i)}
+            />)
+          })}
         </Box>
 
         <Typography
@@ -136,14 +70,13 @@ const JobListView = () => {
           Regular Priority
         </Typography>
         <Box mt={3}>
-          {regPriorityJobs.map((job,i ) => (
+          {regPriorityJobs.map((job, i) => (
             <JobCard
               className={classes.productCard}
               job={job}
               i={i}
-              handlePriorityChangeToReg={handlePriorityChangeToReg}
-              handlePriorityChangeToHigh={handlePriorityChangeToHigh}
-
+              handlePriorityChangeToReg={()=> handlePriorityChangeToReg(i)}
+              handlePriorityChangeToHigh={()=>handlePriorityChangeToHigh(i)}
             />
           ))}
         </Box>

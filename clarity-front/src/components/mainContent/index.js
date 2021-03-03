@@ -1,7 +1,17 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import TopBar from './TopBar';
+import SignIn from '../../views/auth/signin';
+import NotFoundView from '../../views/errors/NotFoundView';
+import SignUp from '../../views/auth/signup';
+import SignOut from '../../views/auth/signout';
+import PasswordReset from '../../views/auth/passwordreset';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flex: '1 1 auto',
     overflow: 'hidden',
-    paddingTop: 64
   },
   contentContainer: {
     display: 'flex',
@@ -34,11 +43,26 @@ const MainLayout = () => {
 
   return (
     <div className={classes.root}>
-      <TopBar />
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <Outlet />
+            <Switch>
+              <Route path="/" component={<SignIn />} >
+                <SignIn />
+              </Route>
+              <Route path="/logout" component={<SignOut />} >
+                <SignOut />
+              </Route>
+              <Route path="/passwordReset" component={<PasswordReset />} >
+                <PasswordReset />
+              </Route>
+              <Route path="/signup" component={<SignUp />} >
+                <SignUp />
+              </Route>
+              <Route path="*" component={<NotFoundView />} > 
+                <NotFoundView />
+              </Route>
+            </Switch>
           </div>
         </div>
       </div>

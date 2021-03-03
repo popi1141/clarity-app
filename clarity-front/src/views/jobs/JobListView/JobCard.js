@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -12,7 +12,17 @@ import {
   Chip,
   Collapse,
   makeStyles,
-  SvgIcon
+  SvgIcon,
+  FormControl,
+  FormLabel,
+  FormHelperText,
+  Input,
+  InputLabel,
+  OutlinedInput,
+  MenuItem,
+  Select,
+  TextField,
+  Button
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -20,7 +30,13 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import svg from '../../../assets/push-pin.svg';
+import { PushPin } from '../../../assets/PushPin.js';
+import { DatePicker } from "@material-ui/pickers";
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
+import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
+import firebase from '@firebase/app';
+import '@firebase/firestore'
+import '@firebase/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,21 +55,38 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityChangeToHigh, ...props }) => {
+const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityChangeToHigh, ...props }) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false)
-  const [notifsOn, setNotifsOn] = useState(false)
-  const [priorityStatus, setPriority] = useState(job.priority)
+  const [values, setValues] = useState({})
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  useEffect(() => {
+    setInitialData()
+  }, [])
 
+  // retrieve organized card data from job lists
+  const setInitialData = () => {
+    setValues({
+      ...values,
+      id: job.id,
+      boardID: job.boardID,
+      boardName: job.boardName,
+      title: job.title,
+      location: job.location,
+      company: job.company,
+      deadline: job.deadline != '' ? job.deadline.toDate() : new Date(),
+      postedDate: job.postedDate != '' ? job.postedDate.toDate() : new Date(),
+      progress: job.progress,
+      companyContactName: job.companyContactName,
+      companyContactEmail: job.companyContactEmail,
+      appMaterial: job.appMaterial,
+      priority: job.priority,
+      url: job.url,
+      tags: job.tags,
+      notes: job.notes
+    });
+  }
 
-  const handleNotifs = () => {
-    setNotifsOn(!notifsOn);
-  };
-
+  // calculate time since job was posted
   const calculateTimeDiff = (postedDate) => {
     const currDate = new Date()
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
@@ -61,15 +94,119 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
     return diffDays
   }
 
-  const changePriority = () => {
-    console.log(i)
+  // expand/contract card 
+  const [open, setOpen] = useState(false)
+  const handleExpandClick = () => {
+    setOpen(!open);
+  };
 
-    if (priorityStatus) {
+  // notifications
+  const [notifsOn, setNotifsOn] = useState(false)
+  const handleNotifs = () => {
+    setNotifsOn(!notifsOn);
+  };
+
+  // toggle editing
+  const [editing, toggleEditing] = useState(false)
+  const handleEditingClick = () => {
+    console.log(values.deadline)
+    toggleEditing(!editing)
+    setOpen(true);
+  }
+
+  // change priority
+  const [priorityStatus, setPriority] = useState(job.priority)
+  const changePriority = (i) => {
+    if (values.priorityStatus) {
       handlePriorityChangeToReg(i)
     } else {
       handlePriorityChangeToHigh(i)
     }
-    setPriority(!priorityStatus)
+    setValues({ ...values, priority: !values.priority });
+  }
+
+  const appStatus = [
+    { value: 'Need to Apply' },
+    { value: 'Waiting to Hear Back' },
+    { value: 'Rejected' },
+    { value: 'Interviewing' },
+    { value: 'Got an Offer' },
+    { value: 'Accepted Offer' },
+    { value: 'N/A' },
+
+  ]
+
+  // handle app material user input
+  const appMaterialOptions = [
+    { value: 'Resume' },
+    { value: 'Cover Letter' },
+    { value: 'Letter of Recommendation' },
+    { value: 'Portfolio' },
+    { value: 'Transcript' },
+    { value: 'Certifications' },
+    { value: 'N/A' },
+
+  ]
+  const handleInputChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+  const [currentAddMaterial, setCurrAddMaterial] = useState(null)
+  const [showAddMaterialSelect, toggleAddMaterialMenu] = useState(false)
+
+  const handleAppMaterialAdd = (event) => {
+    setCurrAddMaterial(event.target.value)
+
+    var specificArrayInObject = values.appMaterial;
+    specificArrayInObject.push(event.target.value);
+    var newObj = { ...values, [event.target.name]: event.target.value };
+    setValues(newObj)
+    toggleAddMaterialMenu(!showAddMaterialSelect)
+    setCurrAddMaterial('')
+
+  }
+
+  const handleAddMaterialButtonClick = () => {
+    toggleAddMaterialMenu(!showAddMaterialSelect)
+  }
+
+
+  // handle category tags user input
+  const [currentAddTag, setCurrAddMTag] = useState(null)
+  const [showAddTagSelect, toggleAddTagMenu] = useState(false)
+
+  const handleTagChange = (event) => {
+    setCurrAddMTag(event.target.value)
+
+  }
+  const handleTagAdd = (event) => {
+
+    var specificArrayInObject = values.tags;
+    specificArrayInObject.push(event.target.value);
+    var newObj = { ...values, [event.target.name]: event.target.value };
+    setValues(newObj)
+    toggleAddTagMenu(!showAddTagSelect)
+    setCurrAddMTag('')
+  }
+
+  const handleAddTagButtonClick = () => {
+    toggleAddTagMenu(!showAddTagSelect)
+  }
+
+  const saveData = () => {
+    const uid = localStorage.getItem("uid")
+
+
+    const updateRef = firebase.firestore()
+      .collection('users')
+      .doc(uid)
+      .collection('boards')
+      .add({
+        cards: values
+      })
+      .then(function () {
+        console.log("Updated");
+      });
+
   }
 
   return (
@@ -82,9 +219,7 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
           display="flex">
 
           <Box m={5}>
-            <SvgIcon style={{ color:  priorityStatus ? 'black' : 'gray' }} onClick={changePriority} >
-            <path d="M19.083 1c0 1.018-1.424 1.907-3.541 2.382V11c2.926.652 4.958 2.086 4.958 3.751h-7.792V23h-1.416v-8.25H3.5c0-1.665 2.032-3.1 4.958-3.751V3.382C6.341 2.907 4.917 2.018 4.917 1h14.166zs" />
-            </SvgIcon>
+            <PushPin changePriority={changePriority} priorityStatus={priorityStatus} i={i}></PushPin>
           </Box>
           <Box
             display="flex"
@@ -92,28 +227,108 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
             flexGrow={1}
             flexDirection="column"
           >
-            <Box
-              display="flex"
-              justifyContent="flex-start"
-              mb={3}
-            >
-              <Typography
-                align="center"
-                color="textPrimary"
-                gutterBottom
-                variant="h2"
+            {editing ?
+              <Box
+                display="flex"
+                justifyContent="flex-start"
+                mb={3}
               >
-                {job.title}
-              </Typography>
-              <Typography
-                color="textSecondary"
-                display="inline"
-                variant="body2"
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    color="textPrimary"
+                    gutterBottom
+                    variant="h4"
+                  >
+                    Job Title
+                  </Typography>
+                  <FormControl>
+                    <OutlinedInput
+                      placeholder="Position Title"
+                      value={values.title}
+                      onChange={handleInputChange('title')}
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    color="textPrimary"
+                    gutterBottom
+                    variant="h4"
+                  >
+                    Company
+                  </Typography>
+                  <FormControl>
+                    <OutlinedInput
+                      placeholder="Company Name"
+                      value={values.company}
+                      onChange={handleInputChange('company')}
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    color="textPrimary"
+                    gutterBottom
+                    variant="h4"
+                  >
+                    Location
+                  </Typography>
+                  <FormControl>
+                    <OutlinedInput
+                      placeholder="Location"
+                      value={values.location}
+                      onChange={handleInputChange('location')}
+                      labelWidth={0}
+                    />
+                  </FormControl>
+                </Box>
+              </Box>
+              :
+              <Box
+                display="flex"
+                justifyContent="flex-start"
+                flexDirection="column"
+                mb={3}
               >
-                <LocationOnIcon />
-                {job.location}
-              </Typography>
-            </Box>
+                <Typography
+                  color="textPrimary"
+                  gutterBottom
+                  variant="h2"
+                >
+                  {values.title}
+                </Typography>
+
+                <Box>
+                  <Typography
+                    color="textPrimary"
+                    display="inline"
+                    variant="body1"
+                  >
+                    {values.company}
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    display="inline"
+                    variant="body2"
+                  >
+                    <LocationOnIcon />
+                    {values.location}
+                  </Typography>
+
+                </Box>
+
+              </Box>}
 
             <Box p={2}>
               <Grid
@@ -121,25 +336,77 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
                 justify="space-between"
                 spacing={2}
               >
-                <Grid
-                  className={classes.statsItem}
-                  item
-                >
-                  <Chip label={'Deadline: ' + job.deadline.toDate().toLocaleString('default', { month: 'long' }) + ' '
-                    + job.deadline.toDate().getDate() + ', ' + job.deadline.toDate().getFullYear()} />
-                  <Chip label={'Posted: ' + calculateTimeDiff(job.postedDate.toDate()) + ' days ago'} />
-                  <Chip label={job.progress} />
 
-                </Grid>
+                {editing ?
+                  <Grid
+                    className={classes.statsItem}
+                    item
+                  >
+                    <DatePicker
+                      disableToolbar
+                      variant="inline"
+                      label="Deadline"
+                      value={values.deadline}
+                      onChange={handleInputChange('deadline')}
+                    />
+                    <DatePicker
+                      disableToolbar
+                      variant="inline"
+                      label="Posted Date"
+                      value={values.postedDate}
+                      onChange={handleInputChange('postedDate')}
+                    />
+
+                    <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel>Application Status</InputLabel>
+                      <Select
+                        value={currentAddMaterial}
+                        onChange={handleAppMaterialAdd}
+                      >
+                        {appStatus.map((item) => {
+                          return (<MenuItem value={item.value}>{item.value}</MenuItem>)
+                        })}
+
+                      </Select>
+                    </FormControl>
+
+                    <Chip
+                      label="Job Posting URL"
+                      href={values.url}
+                      deleteIcon={<ArrowForwardIosOutlinedIcon />}
+                      variant="outlined"
+                    />
+
+                  </Grid>
+
+                  :
+                  <Grid
+                    className={classes.statsItem}
+                    item
+                  >
+                    <Chip label={values.deadline && 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
+                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear()} />
+                    <Chip label={values.postedDate && 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'} />
+
+                    <Chip label={values.progress} />
+
+                    <Chip
+                      label="Job Posting URL"
+                      href={values.url}
+                      deleteIcon={<ArrowForwardIosOutlinedIcon />}
+                      variant="outlined"
+                    />
+                  </Grid>
+                }
               </Grid>
 
             </Box>
           </Box>
-          <Box m={5} onClick={() => handleNotifs()}>
-            {notifsOn ? <NotificationsIcon /> : <NotificationsNoneIcon />}
+          <Box m={5} onClick={() => handleEditingClick()}>
+            {editing ? null : <CreateIcon />}
 
           </Box>
-          <Box m={5} onClick={() => handleClick()}>
+          <Box m={5} onClick={() => handleExpandClick()}>
             {open ? <ExpandMore /> : <ExpandLess />}
 
           </Box>
@@ -162,23 +429,7 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
             flexGrow={1}
             m={3}
           >
-            <Typography
-              color="textPrimary"
-              gutterBottom
-              variant="h5"
-            >
-              Company Contact
-          </Typography>
-            <Box
-              display="flex"
-              justifyContent="flex-start"
-              mb={4}
-            >
 
-              <Chip label={job.companyContactName} />
-              <Chip label={job.companyContactEmail} />
-
-            </Box>
             <Typography
               color="textPrimary"
               gutterBottom
@@ -191,11 +442,93 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
               justifyContent="flex-start"
               mb={3}
             >
-
-              {job.appMaterial && job.appMaterial.map((item) => {
+              {values.appMaterial && values.appMaterial.map((item) => {
                 return (<Chip label={item}></Chip>)
               })}
+
+              {showAddMaterialSelect ?
+                <FormControl className={classes.formControl}>
+                  <Select
+                    value={currentAddMaterial}
+                    onChange={handleAppMaterialAdd}
+                  >
+                    {appMaterialOptions.filter(item => !values.appMaterial.includes(item.value)).map((item) => {
+                      return (<MenuItem value={item.value}>{item.value}</MenuItem>)
+                    })}
+
+                  </Select>
+                </FormControl>
+                :
+                null
+              }
+              {editing ?
+                <AddCircleOutlineOutlinedIcon onClick={handleAddMaterialButtonClick} />
+                : null
+              }
             </Box>
+
+            <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h5"
+            >
+              Category Tags
+          </Typography>
+            <Box
+              display="flex"
+              justifyContent="flex-start"
+              mb={3}
+            >
+              {values.tags && values.tags.map((item) => {
+                return (<Chip label={item}></Chip>)
+              })}
+
+              {showAddTagSelect ?
+                <FormControl className={classes.formControl}>
+                  <OutlinedInput
+                    placeholder="Add Tag"
+                    value={currentAddTag}
+                    onKeyPress={(ev) => {
+                      if (ev.key === 'Enter') {
+                        handleTagAdd(ev)
+                        ev.preventDefault();
+                      }
+                    }}
+                    onChange={handleTagChange}
+                    labelWidth={0}
+                  />
+                </FormControl>
+                :
+                null
+              }
+              {editing ?
+                <AddCircleOutlineOutlinedIcon onClick={handleAddTagButtonClick} />
+                : null
+              }
+            </Box>
+
+            <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h5"
+            >
+              Notes
+          </Typography>
+
+            {editing ?
+              <TextField
+                defaultValue={values.notes}
+                variant="filled"
+              />
+              :
+              <TextField
+                disabled
+                defaultValue={values.notes}
+                variant="filled"
+              />
+
+            }
+
           </Box>
 
           <Box
@@ -204,24 +537,25 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
             flexDirection="column"
             m={5}
           >
-            <Chip label={'Job Posting URL >'} />
             <Box
               display="flex"
               justifyContent="flex-start"
               flexDirection="column"
 
-              m={3}
+              flexGrow={1}
             >
-              <Typography
-                color="textPrimary"
-                display="inline"
-                variant="h5"
-              >
-                Application Status
-          </Typography>
-              <Chip label={job.progress} />
 
             </Box>
+
+            <Button onClick={saveData} className={classes.saveButton}>
+              <Typography
+                color="white"
+                display="inline"
+                variant="h3"
+              >
+                Save
+          </Typography>
+            </Button>
           </Box>
         </Box>
       </Collapse>
@@ -229,9 +563,8 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
   );
 };
 
-ProductCard.propTypes = {
+JobCard.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object.isRequired
 };
 
-export default ProductCard;
+export default JobCard;

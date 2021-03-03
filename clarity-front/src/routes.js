@@ -21,7 +21,7 @@ const routes = [
       { path: 'account', element: <AccountView /> },
       { path: 'dashboard', element: <JobListView /> },
       { path: 'settings', element: <SettingsView /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <NotFoundView />}
     ]
   },
   {
@@ -33,8 +33,7 @@ const routes = [
       { path: 'logout', element: <SignOut /> },
       { path: 'passwordreset', element: <PasswordReset /> },
       { path: '404', element: <NotFoundView /> },
-      { path: '/', element: <Navigate to="/login" /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '/', element: <SignIn /> },
     ]
   }
 ];

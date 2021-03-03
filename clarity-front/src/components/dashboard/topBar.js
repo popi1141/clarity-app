@@ -23,17 +23,24 @@ import SearchIcon from '@material-ui/icons/Search';
 import SearchBar from './searchBar.js';
 //import Logo from 'src/components/Logo';
 
-const useStyles = makeStyles(() => ({
-  root: {},
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: 'white',
+    marginLeft: theme.spacing(32)
+  },
   avatar: {
-    width: 60,
-    height: 60
+    width: theme.spacing(4),
+    height: theme.spacing(4)
+  },
+  searchIcon: {
+    color: 'gray'
   }
 }));
 
 const TopBar = ({
   className,
   onMobileNavOpen,
+  createNewCard,
   ...rest
 }) => {
   const classes = useStyles();
@@ -51,18 +58,15 @@ const TopBar = ({
       elevation={0}
       {...rest}
     >
-      <Toolbar>
-        <Box display="flex" flexGrow={1} >
-          <Box mt={3} ml={10} mr={10}>
-            <RouterLink to="/">
-              Clarity
-            </RouterLink>
-          </Box>
-          <SearchBar />
+      <Toolbar className={clsx(classes.root, className)}>
+        <Box display="flex" mt={3} mb={3} ml={20}  mr={10}flexGrow={1} >
+          <SearchBar 
+          createNewCard={createNewCard}
+          />
         </Box>
 
         <Hidden mdDown>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}
               color="primary"
@@ -70,6 +74,9 @@ const TopBar = ({
             >
               <NotificationsIcon />
             </Badge>
+          </IconButton> */}
+          <IconButton color="inherit">
+              <SearchIcon className={classes.searchIcon}/>
           </IconButton>
           <Avatar
             className={classes.avatar}

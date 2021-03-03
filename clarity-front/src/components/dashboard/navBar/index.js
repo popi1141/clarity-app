@@ -24,6 +24,7 @@ import {
 } from 'react-feather';
 import NavItem from './navItem';
 
+
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
   jobTitle: 'Senior Developer',
@@ -45,14 +46,13 @@ const items = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
-    width: 256
+    width: theme.spacing(32)
   },
   desktopDrawer: {
-    width: 256,
-    top: 64,
-    height: 'calc(100% - 64px)'
+    width: theme.spacing(32),
+    // height: 'calc(100% - 64px)'
   },
   avatar: {
     cursor: 'pointer',
@@ -78,6 +78,11 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       display="flex"
       flexDirection="column"
     >
+      <Box p={2}
+        mb={5}
+        ml={4}>
+          <Typography>Clarity Logo</Typography>
+      </Box>
       <Box p={2}>
         <List>
           {items.map((item) => (
@@ -126,7 +131,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false
 };
 

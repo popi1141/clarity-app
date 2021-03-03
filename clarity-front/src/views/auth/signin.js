@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useUser } from 'reactfire';
 import Alert from '@material-ui/lab/Alert';
 
@@ -22,7 +22,7 @@ import Alert from '@material-ui/lab/Alert';
 const SignIn = () => {
     const classes = useStyles();
 
-    const navigate = useNavigate();  
+    const history = useHistory();  
     // User State
     const [user, setUser] = useState({
         email: '',
@@ -56,7 +56,7 @@ const SignIn = () => {
                     firebase.auth().signOut();
                 }
                 localStorage.setItem("uid", firebase.auth().currentUser.uid)
-                navigate('/app/dashboard')
+                history.push('/app/dashboard')
             })
             .catch(error => {
                 // Update the error
@@ -126,7 +126,7 @@ const SignIn = () => {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link to="/passwordReset" s>
+                                <Link to="/passwordReset" >
                                     Forgot password?
                                 </Link>
                             </Grid>
