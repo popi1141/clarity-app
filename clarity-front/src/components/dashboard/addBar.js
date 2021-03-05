@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.white,
     borderRadius: '0px 30px 30px 0px',
     border: 'none',
-    padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(1.5)}px ${theme.spacing(3)}px`,
     display: 'flex',
     '&:hover': {
       backgroundColor: theme.palette.primary.first,

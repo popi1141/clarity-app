@@ -10,7 +10,9 @@ import {
   Hidden,
   List,
   Typography,
-  makeStyles
+  makeStyles,
+  Icon,
+  SvgIcon
 } from '@material-ui/core';
 import {
   AlertCircle as AlertCircleIcon,
@@ -24,6 +26,8 @@ import {
 } from 'react-feather';
 import NavItem from './navItem';
 import { ReactComponent as Logo } from '../../../assets/Logo.svg'
+//import Logo from '../../../assets/claritylogo.png';
+
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -32,10 +36,6 @@ const user = {
 };
 
 const items = [
-  {
-    href: '/app/dashboard',
-    title: 'All Postings'
-  },
   {
     href: '/app/dashboard',
     title: 'UX Jobs'
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   desktopDrawer: {
     width: theme.spacing(32),
-    // height: 'calc(100% - 64px)'
+    borderRight: 0,
   },
   avatar: {
     cursor: 'pointer',
@@ -63,12 +63,18 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '30px',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.white,
-    letterSpacing: '0.2px',
-    padding: '8px 32px 8px 24px',
+    padding: '12px 48px 12px 24px',
     '&:hover': {
       backgroundColor: theme.palette.primary.first,
 
-    }
+    },
+    textTransform: 'none',
+    
+  },
+  title: {
+    fontSize: '20px',
+    fontWeight: 'medium',
+    letterSpacing: '0.1px',
   },
   navItem: {
     color: theme.palette.black,
@@ -102,6 +108,7 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
       height="100%"
       display="flex"
       flexDirection="column"
+      boxShadow={0}
     >
       <Box p={2}
         mt={2.5}
@@ -119,9 +126,9 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
           component={RouterLink}
           to={'/app/dashboard'}
         >
-          <span className={classes.title}>
+          <Typography className={classes.title}>
             All Postings
-        </span>
+        </Typography>
         </Button>
 
       </Box>
@@ -129,13 +136,13 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
         ml={7}
       >
         <Box
+        mb={2}
         >
           <Typography variant="h3" className={classes.tags}>MY TAGS</Typography>
         </Box>
         <Box
           mb={2}
           className={classes.navItems}
-
         >
           <List>
             {boards.map((item) => (

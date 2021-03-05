@@ -22,6 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     paddingLeft: '0px'
+  },
+  active: {
+    color: theme.palette.primary.main,
+    '& $title': {
+      fontWeight: theme.typography.fontWeight
+    },
+    '& $icon': {
+      color: theme.palette.primary.main
+    }
   }
   // active: {
   //   color: theme.palette.primary.main,

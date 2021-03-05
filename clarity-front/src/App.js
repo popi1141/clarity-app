@@ -16,7 +16,6 @@ import DateFnsUtils from '@date-io/date-fns';
 import MomentUtils from '@date-io/moment';
 
 const App = () => {
-
   return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>

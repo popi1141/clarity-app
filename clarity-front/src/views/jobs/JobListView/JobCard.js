@@ -30,7 +30,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { PushPin } from '../../../assets/PushPin.js';
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import { DatePicker } from "@material-ui/pickers";
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
@@ -44,29 +44,51 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: '30px',
-    boxShadow: '0px 2px 7px 4px rgb(0,0,0,0.1)',
+    borderRadius: '10px',
+    boxShadow: '0 3px 10px 0 rgba(0, 0, 0, 0.1)',
     margin: theme.spacing(2, 0, 2, 0)
   },
   statsItem: {
     alignItems: 'center',
     display: 'flex'
   },
-  statsIcon: {
-    marginRight: theme.spacing(1)
+  jobUrlButton: {
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    borderRadius: '30px'
+  },
+  deadlineButton: {
+    backgroundColor: theme.palette.highlight.pink,
+    borderRadius: '30px',
+    marginRight: '2%',
+    color: 'white'
+  },
+  dataButton: {
+    marginRight: '2%',
+    borderRadius: '30px'
+  },
+  input: {
+    width: theme.spacing(20),
+    height: theme.spacing(6),
+    gap: '10px',
+    padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
+    borderRadius: '10px',
+    border: 'solid 1px var(--gray - 2)',
+    marginRight: theme.spacing(5),
+    fontSize: '16px'
   }
-}));
+  }));
 
-const JobCard = ({ 
-  className, 
-  job, 
-  i, 
-  handlePriorityChangeToReg, 
-  handlePriorityChangeToHigh, 
-  initialEditability, 
-  setInitialEditability, 
+const JobCard = ({
+  className,
+  job,
+  i,
+  handlePriorityChangeToReg,
+  handlePriorityChangeToHigh,
+  initialEditability,
+  setInitialEditability,
   updatePriorityLists,
-  ...props 
+  ...props
 }) => {
   const classes = useStyles();
   const [values, setValues] = useState({})
@@ -141,7 +163,7 @@ const JobCard = ({
   // change priority
   const [priorityStatus, setPriority] = useState(null)
   const changePriority = (id) => {
-    
+
     const uid = localStorage.getItem("uid")
     const newData = values
     newData.priority = !values.priority
@@ -150,7 +172,7 @@ const JobCard = ({
     console.log(newData)
 
     console.log(values.priority)
-    setValues(({priority, ...prevState}) => ({
+    setValues(({ priority, ...prevState }) => ({
       ...prevState,
       priority: !priority
     }));
@@ -168,7 +190,7 @@ const JobCard = ({
         console.log("Updated");
       });
 
-      updatePriorityLists()
+    updatePriorityLists()
 
   }
 
@@ -199,11 +221,11 @@ const JobCard = ({
   };
 
   const handleDeadlineChange = (value) => {
-    setValues({...values, deadline:value.toDate()})
+    setValues({ ...values, deadline: value.toDate() })
   }
 
   const handlePostedDateChange = (value) => {
-    setValues({...values, postedDate:value.toDate()})
+    setValues({ ...values, postedDate: value.toDate() })
   }
 
 
@@ -238,7 +260,7 @@ const JobCard = ({
   const handleTagAdd = (event) => {
     var specificArrayInObject = values.tags;
     specificArrayInObject.push(event.target.value);
-    let newObj = values; 
+    let newObj = values;
     newObj.tags = specificArrayInObject
     setValues(newObj)
     toggleAddTagMenu(!showAddTagSelect)
@@ -282,7 +304,7 @@ const JobCard = ({
           display="flex">
 
           <Box m={5}>
-            <PushPin changePriority={() => changePriority(job.id)} priorityStatus={values.priority} ></PushPin>
+            <CollectionsBookmarkIcon changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"></CollectionsBookmarkIcon>
           </Box>
           <Box
             display="flex"
@@ -309,6 +331,7 @@ const JobCard = ({
                   </Typography>
                   <FormControl>
                     <OutlinedInput
+                      className={classes.input}
                       placeholder="Position Title"
                       value={values.title}
                       onChange={handleInputChange('title')}
@@ -329,6 +352,7 @@ const JobCard = ({
                   </Typography>
                   <FormControl>
                     <OutlinedInput
+                      className={classes.input}
                       placeholder="Company Name"
                       value={values.company}
                       onChange={handleInputChange('company')}
@@ -349,7 +373,8 @@ const JobCard = ({
                   </Typography>
                   <FormControl>
                     <OutlinedInput
-                      placeholder="Location"
+                      className={classes.input}
+                      placeholder="City, State"
                       value={values.location}
                       onChange={handleInputChange('location')}
                       labelWidth={0}
@@ -423,6 +448,7 @@ const JobCard = ({
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel>Application Status</InputLabel>
                       <Select
+                        className={classes.selectDropdown}
                         value={values.progress}
                         onChange={handleInputChange('progress')}
                       >
@@ -438,7 +464,7 @@ const JobCard = ({
                       component="a"
                       href={values.url}
                       clickable
-                      target="_blank" 
+                      target="_blank"
                       deleteIcon={<NavigateNextIcon />}
                       onDelete={handleChipDelete}
                       variant="outlined"
@@ -463,10 +489,11 @@ const JobCard = ({
                       component="a"
                       href={values.url}
                       clickable
-                      target="_blank" 
+                      target="_blank"
                       deleteIcon={<NavigateNextIcon />}
                       onDelete={handleChipDelete}
                       variant="outlined"
+                      className={classes.jobUrlButton}
                     />
                   </Grid>
                 }
