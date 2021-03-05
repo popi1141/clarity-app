@@ -12,4 +12,4 @@ const PushPin = ({priorityStatus, changePriority, i}) => {
     )
 }
 
-export { PushPin }; 
+export default PushPin; 

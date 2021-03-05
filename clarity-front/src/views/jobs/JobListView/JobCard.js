@@ -36,6 +36,7 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import PushPin from '../../../assets/PushPin.js'
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
@@ -162,25 +163,18 @@ const JobCard = ({
 
   // change priority
   const [priorityStatus, setPriority] = useState(null)
-  const changePriority = (id) => {
+  const changePriority = async (id) => {
 
     const uid = localStorage.getItem("uid")
     const newData = values
     newData.priority = !values.priority
-    console.log(newData.priority)
-
-    console.log(newData)
-
-    console.log(values.priority)
+ 
     setValues(({ priority, ...prevState }) => ({
       ...prevState,
       priority: !priority
     }));
-    console.log(values.priority)
 
-    console.log(values)
-
-    const updateRef = firebase.firestore()
+    const updateRef = await firebase.firestore()
       .collection('users')
       .doc(uid)
       .collection('cards')
@@ -188,9 +182,10 @@ const JobCard = ({
       .set(values)
       .then(function () {
         console.log("Updated");
+        updatePriorityLists()
+
       });
 
-    updatePriorityLists()
 
   }
 
@@ -304,7 +299,7 @@ const JobCard = ({
           display="flex">
 
           <Box m={5}>
-            <CollectionsBookmarkIcon changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"></CollectionsBookmarkIcon>
+            <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"></PushPin>
           </Box>
           <Box
             display="flex"
