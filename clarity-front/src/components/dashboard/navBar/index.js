@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   desktopDrawer: {
     width: theme.spacing(32),
-    // height: 'calc(100% - 64px)'
+    borderRight: 0,
   },
   avatar: {
     cursor: 'pointer',
@@ -93,6 +93,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       height="100%"
       display="flex"
       flexDirection="column"
+      boxShadow={0}
     >
       <Box>
         <a href="/app/dashboard/">
