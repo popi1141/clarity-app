@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   active: {
     color: theme.palette.primary.main,
     '& $title': {
-      fontWeight: theme.typography.fontWeightMedium
+      fontWeight: theme.typography.fontWeight
     },
     '& $icon': {
       color: theme.palette.primary.main

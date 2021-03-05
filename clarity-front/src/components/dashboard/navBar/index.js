@@ -10,7 +10,9 @@ import {
   Hidden,
   List,
   Typography,
-  makeStyles
+  makeStyles,
+  Icon,
+  SvgIcon
 } from '@material-ui/core';
 import {
   AlertCircle as AlertCircleIcon,
@@ -23,6 +25,7 @@ import {
   Users as UsersIcon
 } from 'react-feather';
 import NavItem from './navItem';
+import Logo from '../../../assets/claritylogo.png';
 
 
 const user = {
@@ -32,10 +35,6 @@ const user = {
 };
 
 const items = [
-  {
-    href: '/app/dashboard',
-    title: 'All Postings'
-  },
   {
     href: '/app/dashboard',
     title: 'UX Jobs'
@@ -58,6 +57,23 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     width: 64,
     height: 64
+  },
+  logo: {
+    margin: 'auto',
+    textAlign: 'center',
+    maxWidth: '70%',
+    maxHeight: '70%',
+    marginLeft: '15%',
+    marginTop: '10%'
+  },
+  bold: {
+    fontWeight: 600
+  },
+  allPostingButton: {
+    borderRadius: '30px',
+    fontWeight: 600,
+    width: '100%',
+    marginBottom: '50px'
   }
 }));
 
@@ -78,12 +94,18 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       display="flex"
       flexDirection="column"
     >
-      <Box p={2}
-        mb={5}
-        ml={4}>
-          <Typography>Clarity Logo</Typography>
+      <Box>
+        <a href="/app/dashboard/">
+          <img src={Logo} className={classes.logo} alt="logo"/>
+        </a>
       </Box>
       <Box p={2}>
+        <Button variant="contained" color="primary" href="/app/dashboard/" className={classes.allPostingButton}>
+          All Postings
+        </Button>
+        <Typography className={classes.bold}> 
+          My Tags
+        </Typography>
         <List>
           {items.map((item) => (
             <NavItem

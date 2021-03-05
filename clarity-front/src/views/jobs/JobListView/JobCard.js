@@ -30,7 +30,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { PushPin } from '../../../assets/PushPin.js';
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import { DatePicker } from "@material-ui/pickers";
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
@@ -42,17 +42,32 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: '30px',
-    boxShadow: '0px 2px 7px 4px rgb(0,0,0,0.1)',
+    borderRadius: '10px',
+    boxShadow: '0 3px 10px 0 rgba(0, 0, 0, 0.1)',
     margin: theme.spacing(2, 0, 2, 0)
   },
   statsItem: {
     alignItems: 'center',
     display: 'flex'
   },
+  jobUrlButton: {
+    color: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    borderRadius: '30px'
+  },
+  deadlineButton: {
+    backgroundColor: theme.palette.highlight.pink,
+    borderRadius: '30px',
+    marginRight: '2%',
+    color: 'white'
+  },
+  dataButton: {
+    marginRight: '2%',
+    borderRadius: '30px'
+  },
   statsIcon: {
     marginRight: theme.spacing(1)
-  }
+  },
 }));
 
 const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityChangeToHigh, ...props }) => {
@@ -219,7 +234,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
           display="flex">
 
           <Box m={5}>
-            <PushPin changePriority={changePriority} priorityStatus={priorityStatus} i={i}></PushPin>
+            <CollectionsBookmarkIcon changePriority={changePriority} priorityStatus={priorityStatus} i={i} color="primary"></CollectionsBookmarkIcon>
           </Box>
           <Box
             display="flex"
@@ -385,16 +400,17 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                     item
                   >
                     <Chip label={values.deadline && 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
-                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear()} />
-                    <Chip label={values.postedDate && 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'} />
+                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear()} className={classes.deadlineButton}/>
+                    <Chip label={values.postedDate && 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'} className={classes.dataButton}/>
 
-                    <Chip label={values.progress} />
+                    <Chip label={values.progress} className={classes.dataButton}/>
 
                     <Chip
-                      label="Job Posting URL"
+                      label="Job Posting URL >"
                       href={values.url}
                       deleteIcon={<ArrowForwardIosOutlinedIcon />}
                       variant="outlined"
+                      className={classes.jobUrlButton}
                     />
                   </Grid>
                 }

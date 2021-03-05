@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     display: 'flex',
     flex: '1 1 auto',
-    overflow: 'hidden',
     paddingTop: 80,
     [theme.breakpoints.up('lg')]: {
       paddingLeft: theme.spacing(32)
@@ -38,12 +37,9 @@ const useStyles = makeStyles((theme) => ({
   contentContainer: {
     display: 'flex',
     flex: '1 1 auto',
-    overflow: 'hidden'
   },
   content: {
     flex: '1 1 auto',
-    height: '100%',
-    overflow: 'auto'
   }
 }));
 
@@ -146,9 +142,9 @@ const DashboardLayout = () => {
   // Get user on mount
   useEffect(() => {
     getUserData();
+    document.body.style.backgroundColor = '#F4F6F8';
   }, []);
-
-
+  
   return (
     <div className={classes.root}>
       <NavBar
@@ -156,7 +152,6 @@ const DashboardLayout = () => {
         openMobile={isMobileNavOpen}
       />
       <div className={classes.wrapper}>
-
         <div className={classes.contentContainer}>
           <div className={classes.content}>
             <TopBar 

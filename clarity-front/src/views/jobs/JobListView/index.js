@@ -11,18 +11,23 @@ import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 //import Toolbar from './Toolbar';
 import JobCard from './JobCard';
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
-import PushPin from '../../../assets/PushPin.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
   jobCard: {
     height: '100%'
+  },
+  bold: {
+    fontWeight: 600
   }
 }));
 
@@ -34,7 +39,6 @@ const JobListView = ({
 }) => {
   const classes = useStyles();
   
-
   return (
     <Page
       className={classes.root}
@@ -45,10 +49,12 @@ const JobListView = ({
           align="left"
           color="textPrimary"
           gutterBottom
-          variant="h1"
+          variant="h2"
+          className={classes.bold}
         >
           High Priority
         </Typography>
+
         <Box mt={3}>
           {highPriorityJobs.map((job, i) => {
             return (<JobCard
@@ -65,10 +71,12 @@ const JobListView = ({
           align="left"
           color="textPrimary"
           gutterBottom
-          variant="h1"
+          variant="h2"
+          className={classes.bold}
         >
           Regular Priority
         </Typography>
+
         <Box mt={3}>
           {regPriorityJobs.map((job, i) => (
             <JobCard
