@@ -47,21 +47,24 @@ const MainLayout = () => {
         <div className={classes.contentContainer}>
           <div className={classes.content}>
             <Switch>
-              <Route path="/" component={<SignIn />} >
+              <Route exact path="/"  >
                 <SignIn />
               </Route>
-              <Route path="/logout" component={<SignOut />} >
+              <Route path="/login" >
+                <SignIn />
+              </Route>
+              <Route path="/logout"  >
                 <SignOut />
               </Route>
-              <Route path="/passwordReset" component={<PasswordReset />} >
+              <Route path="/passwordReset"  >
                 <PasswordReset />
               </Route>
-              <Route path="/signup" component={<SignUp />} >
+              <Route path="/signup" >
                 <SignUp />
               </Route>
-              <Route path="*" component={<NotFoundView />} > 
+              {/* <Route path="*" component={<NotFoundView />} > 
                 <NotFoundView />
-              </Route>
+              </Route> */}
             </Switch>
           </div>
         </div>

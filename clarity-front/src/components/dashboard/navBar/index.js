@@ -23,7 +23,7 @@ import {
   Users as UsersIcon
 } from 'react-feather';
 import NavItem from './navItem';
-
+import { ReactComponent as Logo } from '../../../assets/Logo.svg'
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -58,10 +58,35 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     width: 64,
     height: 64
+  },
+  allPostingsButton: {
+    borderRadius: '30px',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white,
+    letterSpacing: '0.2px',
+    padding: '8px 32px 8px 24px',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.first,
+
+    }
+  },
+  navItem: {
+    color: theme.palette.black,
+    fontWeight: theme.typography.fontWeightMedium,
+    justifyContent: 'flex-start',
+    letterSpacing: 0,
+    textTransform: 'none',
+    width: '100%',
+  },
+  tags: {
+    letterSpacing: '0.2px'
+  },
+  navItems: {
+    textAlign: 'left'
   }
 }));
 
-const NavBar = ({ onMobileClose, openMobile }) => {
+const NavBar = ({ onMobileClose, openMobile, boards }) => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -79,21 +104,54 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       flexDirection="column"
     >
       <Box p={2}
+        mt={2.5}
         mb={5}
-        ml={4}>
-          <Typography>Clarity Logo</Typography>
+        ml={2.5}>
+        <Logo />
       </Box>
-      <Box p={2}>
-        <List>
-          {items.map((item) => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-            />
-          ))}
-        </List>
+      <Box p={2}
+        mb={5}
+        ml={2}
+        mr={3}>
+        <Button
+          activeClassName={classes.active}
+          className={classes.allPostingsButton}
+          component={RouterLink}
+          to={'/app/dashboard'}
+        >
+          <span className={classes.title}>
+            All Postings
+        </span>
+        </Button>
+
       </Box>
+      <Box
+        ml={7}
+      >
+        <Box
+        >
+          <Typography variant="h3" className={classes.tags}>MY TAGS</Typography>
+        </Box>
+        <Box
+          mb={2}
+          className={classes.navItems}
+
+        >
+          <List>
+            {boards.map((item) => (
+              <NavItem
+                className={classes.navItem}
+                href={item.href}
+                key={item.title}
+                title={item.title}
+              />
+            ))}
+          </List>
+        </Box>
+
+      </Box>
+
+
       <Box flexGrow={1} />
     </Box>
   );

@@ -96,7 +96,7 @@ const PasswordReset = () => {
           </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link to="/" variant="body2">
+                            <Link to="/login" variant="body2">
                                 Back to sign in page
               </Link>
                         </Grid>

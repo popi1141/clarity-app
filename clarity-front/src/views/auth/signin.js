@@ -56,6 +56,7 @@ const SignIn = () => {
                     firebase.auth().signOut();
                 }
                 localStorage.setItem("uid", firebase.auth().currentUser.uid)
+                console.log(firebase.auth().currentUser.uid)
                 history.push('/app/dashboard')
             })
             .catch(error => {

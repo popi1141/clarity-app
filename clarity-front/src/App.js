@@ -23,8 +23,8 @@ const App = () => {
 
         <BrowserRouter>
           <Switch>
-            <Route exact path='/' component={MainLayout} />
-            <Route path='/app/*' component={DashboardLayout} />
+          <Route path='/app/*' component={DashboardLayout} />
+            <Route path='/*' component={MainLayout} />
           </Switch>
         </BrowserRouter>
       </MuiPickersUtilsProvider>

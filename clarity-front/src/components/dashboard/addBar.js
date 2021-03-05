@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types';
 import {
   makeStyles,
-  Typography
+  Typography,
+  Button
 } from '@material-ui/core';
 import { StyleSheet, View, TextInput } from 'react-native';
 import AddIcon from '@material-ui/icons/Add';
+
 const useStyles = makeStyles((theme) => ({
   form: {
     minWidth: '100%',
@@ -18,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
     border: 'none',
     padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
     display: 'flex',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.first,
+
+    }
   },
 }))
 
@@ -41,12 +47,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const SearchBar = ({createNewCard}) => {
+const AddBar = ({createNewCard}) => {
   const classes = useStyles()
   const [url, setURL] = useState(null)
 
-  const handleURLChange = () => {
-    setURL(url)
+  const handleURLChange = (event) => {
+    setURL(event.target.value)
   }
 
   const handleAdd = (url) => {
@@ -61,18 +67,18 @@ const SearchBar = ({createNewCard}) => {
           value={url}
           onChange={handleURLChange}
         />
-        <button type="button" className={classes.addButton} onClick={() => createNewCard(url)}>
+        <Button type="button" className={classes.addButton} onClick={() => createNewCard(url)}>
           <AddIcon className={classes.addIcon}></AddIcon>
           <Typography>Add</Typography>
-        </button>
+        </Button>
       </View>
     </form>
   )
 }
 
 
-SearchBar.propTypes = {
+AddBar.propTypes = {
   className: PropTypes.string
 };
 
-export default SearchBar;
+export default AddBar;

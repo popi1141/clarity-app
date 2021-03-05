@@ -47,7 +47,7 @@ const SignOut = () => {
                     className={classes.submit}
                     onClick={handleClick}
                     component={Link}
-                    to={'/'}
+                    to={'/login'}
                 >
                     Log Out
                 </Button>

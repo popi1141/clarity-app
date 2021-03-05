@@ -21,8 +21,33 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3)
   },
-  jobCard: {
-    height: '100%'
+  regJobCard: {
+    height: '100%',
+    animation: `$fadeIn 500ms`,
+  },
+  highJobCard: {
+    height: '100%',
+    animation: `$fadeInFromBottom 500ms`,
+  },
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(-200%)"
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    }
+  },
+  "@keyframes fadeInFromBottom": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(200%)"
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)"
+    }
   }
 }));
 
@@ -30,10 +55,13 @@ const JobListView = ({
   handlePriorityChangeToHigh,
   handlePriorityChangeToReg,
   highPriorityJobs,
-  regPriorityJobs
+  regPriorityJobs,
+  initialEditability,
+  setInitialEditability,
+  updatePriorityLists
 }) => {
   const classes = useStyles();
-  
+
 
   return (
     <Page
@@ -52,11 +80,12 @@ const JobListView = ({
         <Box mt={3}>
           {highPriorityJobs.map((job, i) => {
             return (<JobCard
-              className={classes.jobCard}
+              className={classes.highJobCard}
+              key={job.id}
               job={job}
-              i={i}
-              handlePriorityChangeToReg={() => handlePriorityChangeToReg(i)}
-              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(i)}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
+              updatePriorityLists={updatePriorityLists}
             />)
           })}
         </Box>
@@ -72,11 +101,14 @@ const JobListView = ({
         <Box mt={3}>
           {regPriorityJobs.map((job, i) => (
             <JobCard
-              className={classes.productCard}
+              className={classes.regJobCard}
+              key={job.id}
               job={job}
-              i={i}
-              handlePriorityChangeToReg={()=> handlePriorityChangeToReg(i)}
-              handlePriorityChangeToHigh={()=>handlePriorityChangeToHigh(i)}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
+              initialEditability={initialEditability}
+              setInitialEditability={setInitialEditability}
+              updatePriorityLists={updatePriorityLists}
             />
           ))}
         </Box>

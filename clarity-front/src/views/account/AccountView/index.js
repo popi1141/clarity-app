@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Account = () => {
+const Account = ({ user }) => {
   const classes = useStyles();
 
   return (
@@ -36,7 +36,7 @@ const Account = () => {
             md={6}
             xs={12}
           >
-            <Profile />
+            <Profile user={user} />
           </Grid>
           <Grid
             item
@@ -44,7 +44,7 @@ const Account = () => {
             md={6}
             xs={12}
           >
-            <ProfileDetails />
+            <ProfileDetails user={user} />
           </Grid>
         </Grid>
       </Container>

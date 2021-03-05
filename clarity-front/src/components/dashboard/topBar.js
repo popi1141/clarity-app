@@ -20,7 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import SearchIcon from '@material-ui/icons/Search';
-import SearchBar from './searchBar.js';
+import AddBar from './addBar.js';
 //import Logo from 'src/components/Logo';
 
 const useStyles = makeStyles((theme) => ({
@@ -59,8 +59,8 @@ const TopBar = ({
       {...rest}
     >
       <Toolbar className={clsx(classes.root, className)}>
-        <Box display="flex" mt={3} mb={3} ml={20}  mr={10}flexGrow={1} >
-          <SearchBar 
+        <Box display="flex" mt={4} mb={4} ml={20}  mr={10}flexGrow={1} >
+          <AddBar 
           createNewCard={createNewCard}
           />
         </Box>

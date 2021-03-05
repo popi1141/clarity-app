@@ -34,6 +34,8 @@ import { PushPin } from '../../../assets/PushPin.js';
 import { DatePicker } from "@material-ui/pickers";
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
@@ -55,9 +57,34 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityChangeToHigh, ...props }) => {
+const JobCard = ({ 
+  className, 
+  job, 
+  i, 
+  handlePriorityChangeToReg, 
+  handlePriorityChangeToHigh, 
+  initialEditability, 
+  setInitialEditability, 
+  updatePriorityLists,
+  ...props 
+}) => {
   const classes = useStyles();
   const [values, setValues] = useState({})
+  const [defaultValues, setDefaultValues] = useState({
+    title: 'Untitled',
+    location: 'Unspecified Location',
+    company: 'Unspecified Company',
+    deadline: 'N/A',
+    postedDate: 'N/A',
+    progress: 'N/A',
+    companyContactName: '',
+    companyContactEmail: '',
+    appMaterial: [],
+    priority: false,
+    url: '',
+    tags: '',
+    notes: 'No notes added'
+  })
 
   useEffect(() => {
     setInitialData()
@@ -67,14 +94,11 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
   const setInitialData = () => {
     setValues({
       ...values,
-      id: job.id,
-      boardID: job.boardID,
-      boardName: job.boardName,
       title: job.title,
       location: job.location,
       company: job.company,
-      deadline: job.deadline != '' ? job.deadline.toDate() : new Date(),
-      postedDate: job.postedDate != '' ? job.postedDate.toDate() : new Date(),
+      deadline: job.deadline ? job.deadline.toDate() : new Date(),
+      postedDate: job.postedDate ? job.postedDate.toDate() : new Date(),
       progress: job.progress,
       companyContactName: job.companyContactName,
       companyContactEmail: job.companyContactEmail,
@@ -84,6 +108,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
       tags: job.tags,
       notes: job.notes
     });
+    console.log(job.url)
   }
 
   // calculate time since job was posted
@@ -95,7 +120,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
   }
 
   // expand/contract card 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(initialEditability)
   const handleExpandClick = () => {
     setOpen(!open);
   };
@@ -107,33 +132,55 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
   };
 
   // toggle editing
-  const [editing, toggleEditing] = useState(false)
+  const [editing, toggleEditing] = useState(initialEditability)
   const handleEditingClick = () => {
-    console.log(values.deadline)
     toggleEditing(!editing)
     setOpen(true);
   }
 
   // change priority
-  const [priorityStatus, setPriority] = useState(job.priority)
-  const changePriority = (i) => {
-    if (values.priorityStatus) {
-      handlePriorityChangeToReg(i)
-    } else {
-      handlePriorityChangeToHigh(i)
-    }
-    setValues({ ...values, priority: !values.priority });
+  const [priorityStatus, setPriority] = useState(null)
+  const changePriority = (id) => {
+    
+    const uid = localStorage.getItem("uid")
+    const newData = values
+    newData.priority = !values.priority
+    console.log(newData.priority)
+
+    console.log(newData)
+
+    console.log(values.priority)
+    setValues(({priority, ...prevState}) => ({
+      ...prevState,
+      priority: !priority
+    }));
+    console.log(values.priority)
+
+    console.log(values)
+
+    const updateRef = firebase.firestore()
+      .collection('users')
+      .doc(uid)
+      .collection('cards')
+      .doc(job.id)
+      .set(values)
+      .then(function () {
+        console.log("Updated");
+      });
+
+      updatePriorityLists()
+
   }
 
-  const appStatus = [
+  // app Status
+  const appStatusOptions = [
     { value: 'Need to Apply' },
     { value: 'Waiting to Hear Back' },
     { value: 'Rejected' },
     { value: 'Interviewing' },
     { value: 'Got an Offer' },
     { value: 'Accepted Offer' },
-    { value: 'N/A' },
-
+    { value: 'N/A' }
   ]
 
   // handle app material user input
@@ -150,6 +197,16 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
   const handleInputChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
+
+  const handleDeadlineChange = (value) => {
+    setValues({...values, deadline:value.toDate()})
+  }
+
+  const handlePostedDateChange = (value) => {
+    setValues({...values, postedDate:value.toDate()})
+  }
+
+
   const [currentAddMaterial, setCurrAddMaterial] = useState(null)
   const [showAddMaterialSelect, toggleAddMaterialMenu] = useState(false)
 
@@ -179,10 +236,10 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
 
   }
   const handleTagAdd = (event) => {
-
     var specificArrayInObject = values.tags;
     specificArrayInObject.push(event.target.value);
-    var newObj = { ...values, [event.target.name]: event.target.value };
+    let newObj = values; 
+    newObj.tags = specificArrayInObject
     setValues(newObj)
     toggleAddTagMenu(!showAddTagSelect)
     setCurrAddMTag('')
@@ -192,21 +249,27 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
     toggleAddTagMenu(!showAddTagSelect)
   }
 
-  const saveData = () => {
+  const handleSaveData = () => {
     const uid = localStorage.getItem("uid")
-
 
     const updateRef = firebase.firestore()
       .collection('users')
       .doc(uid)
-      .collection('boards')
-      .add({
-        cards: values
-      })
+      .collection('cards')
+      .doc(job.id)
+      .set(values)
       .then(function () {
         console.log("Updated");
       });
 
+    toggleEditing(false)
+    setOpen(false);
+    setInitialEditability(!initialEditability)
+  }
+
+  const [chipVal, setChipValue] = useState(false)
+  const handleChipDelete = () => {
+    setChipValue(!chipVal)
   }
 
   return (
@@ -219,7 +282,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
           display="flex">
 
           <Box m={5}>
-            <PushPin changePriority={changePriority} priorityStatus={priorityStatus} i={i}></PushPin>
+            <PushPin changePriority={() => changePriority(job.id)} priorityStatus={values.priority} ></PushPin>
           </Box>
           <Box
             display="flex"
@@ -306,7 +369,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                   gutterBottom
                   variant="h2"
                 >
-                  {values.title}
+                  {values.title ? values.title : defaultValues.title}
                 </Typography>
 
                 <Box>
@@ -315,7 +378,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                     display="inline"
                     variant="body1"
                   >
-                    {values.company}
+                    {values.company ? values.company : defaultValues.company}
                   </Typography>
                   <Typography
                     color="textSecondary"
@@ -323,7 +386,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                     variant="body2"
                   >
                     <LocationOnIcon />
-                    {values.location}
+                    {values.location ? values.location : defaultValues.location}
                   </Typography>
 
                 </Box>
@@ -347,23 +410,23 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                       variant="inline"
                       label="Deadline"
                       value={values.deadline}
-                      onChange={handleInputChange('deadline')}
+                      onChange={(newValue) => handleDeadlineChange(newValue)}
                     />
                     <DatePicker
                       disableToolbar
                       variant="inline"
                       label="Posted Date"
                       value={values.postedDate}
-                      onChange={handleInputChange('postedDate')}
+                      onChange={(newValue) => handlePostedDateChange(newValue)}
                     />
 
                     <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel>Application Status</InputLabel>
                       <Select
-                        value={currentAddMaterial}
-                        onChange={handleAppMaterialAdd}
+                        value={values.progress}
+                        onChange={handleInputChange('progress')}
                       >
-                        {appStatus.map((item) => {
+                        {appStatusOptions.map((item) => {
                           return (<MenuItem value={item.value}>{item.value}</MenuItem>)
                         })}
 
@@ -372,8 +435,12 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
 
                     <Chip
                       label="Job Posting URL"
+                      component="a"
                       href={values.url}
-                      deleteIcon={<ArrowForwardIosOutlinedIcon />}
+                      clickable
+                      target="_blank" 
+                      deleteIcon={<NavigateNextIcon />}
+                      onDelete={handleChipDelete}
                       variant="outlined"
                     />
 
@@ -384,16 +451,21 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
                     className={classes.statsItem}
                     item
                   >
-                    <Chip label={values.deadline && 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
-                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear()} />
-                    <Chip label={values.postedDate && 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'} />
+                    <Chip label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
+                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'} />
+                    <Chip label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
+                      : 'Posted: N/A'} />
 
-                    <Chip label={values.progress} />
+                    <Chip label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress} />
 
                     <Chip
                       label="Job Posting URL"
+                      component="a"
                       href={values.url}
-                      deleteIcon={<ArrowForwardIosOutlinedIcon />}
+                      clickable
+                      target="_blank" 
+                      deleteIcon={<NavigateNextIcon />}
+                      onDelete={handleChipDelete}
                       variant="outlined"
                     />
                   </Grid>
@@ -523,6 +595,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
               :
               <TextField
                 disabled
+                placeHolder={defaultValues.notes}
                 defaultValue={values.notes}
                 variant="filled"
               />
@@ -547,7 +620,7 @@ const JobCard = ({ className, job, i, handlePriorityChangeToReg, handlePriorityC
 
             </Box>
 
-            <Button onClick={saveData} className={classes.saveButton}>
+            <Button onClick={handleSaveData} className={classes.saveButton}>
               <Typography
                 color="white"
                 display="inline"

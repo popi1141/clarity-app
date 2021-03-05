@@ -73,6 +73,12 @@ const SignUp = () => {
             })
           })
 
+        // const uid = firebase.auth().currentUser.uid
+        // console.log(uid)
+        // firebase.firestore()
+        //   .collection('users')
+        //   .add({uid})
+
         // Sign Out the user.
         firebase.auth().signOut();
 
