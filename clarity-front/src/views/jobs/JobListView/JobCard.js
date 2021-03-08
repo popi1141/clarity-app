@@ -41,6 +41,7 @@ import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -56,13 +57,22 @@ const useStyles = makeStyles((theme) => ({
   jobUrlButton: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    borderRadius: '30px'
+    borderRadius: '30px',
+    "&&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white
+    },
   },
-  deadlineButton: {
+  deadlineButtonClose: {
     backgroundColor: theme.palette.highlight.pink,
     borderRadius: '30px',
     marginRight: '2%',
     color: 'white'
+  },
+  deadlineButtonNormal: {
+    borderRadius: '30px',
+    marginRight: '2%',
+    color: 'black'
   },
   dataButton: {
     marginRight: '2%',
@@ -77,6 +87,15 @@ const useStyles = makeStyles((theme) => ({
     border: 'solid 1px var(--gray - 2)',
     marginRight: theme.spacing(5),
     fontSize: '16px'
+  },
+  keyDetailsLabel: {
+    marginRight: theme.spacing(0.8),
+  },
+  companyText: {
+    fontWeight:'500',
+  },
+  jobTitle: {
+    fontWeight:'700'
   }
   }));
 
@@ -135,10 +154,10 @@ const JobCard = ({
   }
 
   // calculate time since job was posted
-  const calculateTimeDiff = (postedDate) => {
+  const calculateTimeDiff = (date) => {
     const currDate = new Date()
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffDays = Math.round(Math.abs((currDate - postedDate) / oneDay));
+    const diffDays = Math.round(Math.abs((currDate - date) / oneDay));
     return diffDays
   }
 
@@ -281,7 +300,7 @@ const JobCard = ({
 
     toggleEditing(false)
     setOpen(false);
-    setInitialEditability(!initialEditability)
+    //setInitialEditability(!initialEditability)
   }
 
   const [chipVal, setChipValue] = useState(false)
@@ -299,7 +318,7 @@ const JobCard = ({
           display="flex">
 
           <Box m={5}>
-            <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"></PushPin>
+            <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"/>
           </Box>
           <Box
             display="flex"
@@ -382,12 +401,13 @@ const JobCard = ({
                 display="flex"
                 justifyContent="flex-start"
                 flexDirection="column"
-                mb={3}
+                mb={2}
               >
                 <Typography
                   color="textPrimary"
                   gutterBottom
                   variant="h2"
+                  className={classes.jobTitle}
                 >
                   {values.title ? values.title : defaultValues.title}
                 </Typography>
@@ -397,23 +417,25 @@ const JobCard = ({
                     color="textPrimary"
                     display="inline"
                     variant="body1"
+                    className={`${classes.keyDetailsLabel} ${classes.companyText}`}
                   >
                     {values.company ? values.company : defaultValues.company}
                   </Typography>
+                  <LocationOnIcon style={{ color: '#ABB2BD', marginBottom: '-5px' }}/>
                   <Typography
                     color="textSecondary"
                     display="inline"
-                    variant="body2"
+                    variant="body1"
+                    className={classes.keyDetailsLabel}
                   >
-                    <LocationOnIcon />
+                    
                     {values.location ? values.location : defaultValues.location}
                   </Typography>
-
                 </Box>
 
               </Box>}
 
-            <Box p={2}>
+            <Box paddingBottom={1}>
               <Grid
                 container
                 justify="space-between"
@@ -472,12 +494,20 @@ const JobCard = ({
                     className={classes.statsItem}
                     item
                   >
-                    <Chip label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
-                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'} />
-                    <Chip label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
-                      : 'Posted: N/A'} />
-
-                    <Chip label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress} />
+                    <Chip
+                      label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
+                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'}
+                      className={calculateTimeDiff(values.deadline)< 5 ? classes.deadlineButtonClose: classes.deadlineButtonNormal}
+                    />
+                    <Chip 
+                      label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
+                      : 'Posted: N/A'} 
+                      className={classes.dataButton}
+                    />
+                    <Chip 
+                      label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress} 
+                      className={classes.dataButton}
+                    />
 
                     <Chip
                       label="Job Posting URL"

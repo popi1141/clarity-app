@@ -16,12 +16,23 @@ import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    borderTopLeftRadius: '50px',
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+  },
+  extender: {
+    content:"",
+    backgroundColor: theme.palette.background.dark,
+    position: 'sticky',
+    height: '50vh',
+    width: '4000px',
+    zIndex: '-5',
+    left: '-500px',
+    overflow: "hidden"
   },
   regJobCard: {
     height: '100%',
@@ -136,6 +147,7 @@ const JobListView = ({
             size="small"
           />
         </Box>
+        <Container className={classes.extender}/>
       </Container>
     </Page>
   );

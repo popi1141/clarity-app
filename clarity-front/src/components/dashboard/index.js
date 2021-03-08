@@ -20,7 +20,7 @@ import '@firebase/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.dark,
+    //backgroundColor: theme.palette.background.dark,
     display: 'flex',
     height: '100%',
     overflow: 'hidden',
@@ -39,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
     flex: '1 1 auto',
   },
   content: {
+    marginTop: theme.spacing(5),
+    marginLeft: theme.spacing(3),
     flex: '1 1 auto',
   }
 }));
@@ -208,7 +210,7 @@ const DashboardLayout = () => {
   // Get user on mount
   useEffect(() => {
     getUserData();
-    document.body.style.backgroundColor = '#F4F6F8';
+    //document.body.style.backgroundColor = '#F4F6F8';
   }, []);
   
   return (
