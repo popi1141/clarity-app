@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     content:"",
     backgroundColor: theme.palette.background.dark,
     position: 'sticky',
-    height: '50vh',
+    height: '80vh',
     width: '4000px',
     zIndex: '-5',
     left: '-500px',

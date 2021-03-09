@@ -54,6 +54,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex'
   },
+  datePicker: {
+    marginRight: '2%',
+  },
+  appStatusForm: {
+    minWidth: '20vh',
+    marginRight: '2%',
+  },
+  appStatusLabel: {
+    backgroundColor: theme.palette.background.default,
+    paddingLeft: '5%',
+    paddingRight: '5%',
+  },
   jobUrlButton: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
@@ -453,6 +465,7 @@ const JobCard = ({
                       label="Deadline"
                       value={values.deadline}
                       onChange={(newValue) => handleDeadlineChange(newValue)}
+                      className={classes.datePicker}
                     />
                     <DatePicker
                       disableToolbar
@@ -460,18 +473,23 @@ const JobCard = ({
                       label="Posted Date"
                       value={values.postedDate}
                       onChange={(newValue) => handlePostedDateChange(newValue)}
+                      className={classes.datePicker}
                     />
-
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel>Application Status</InputLabel>
+                    <FormControl variant="outlined" className={classes.appStatusForm}>
+                    <InputLabel htmlFor="outlined-app-status" className={classes.appStatusLabel}>Application Status</InputLabel>
                       <Select
                         className={classes.selectDropdown}
                         value={values.progress}
                         onChange={handleInputChange('progress')}
+                        inputProps={{
+                          name: 'app-status',
+                          id: 'outlined-app-status',
+                        }}
                       >
                         {appStatusOptions.map((item) => {
                           return (<MenuItem value={item.value}>{item.value}</MenuItem>)
                         })}
+
 
                       </Select>
                     </FormControl>
