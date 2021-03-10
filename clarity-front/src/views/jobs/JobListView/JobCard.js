@@ -77,6 +77,13 @@ const useStyles = makeStyles((theme) => ({
     border: 'solid 1px var(--gray - 2)',
     marginRight: theme.spacing(5),
     fontSize: '16px'
+  },
+  selectDropdown: {
+    width: theme.spacing(20),
+  },
+  formControl: {
+    marginRight: theme.spacing(8),
+    fontSize: '12px'
   }
   }));
 

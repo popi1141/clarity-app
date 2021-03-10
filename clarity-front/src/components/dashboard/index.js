@@ -32,14 +32,17 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 80,
     [theme.breakpoints.up('lg')]: {
       paddingLeft: theme.spacing(32)
-    }
+    },
+    borderRadius: '30px 0px 0px 0px'
   },
   contentContainer: {
     display: 'flex',
     flex: '1 1 auto',
+    borderRadius: '30px 0px 0px 0px'
   },
   content: {
     flex: '1 1 auto',
+    borderRadius: '30px 0px 0px 0px'
   }
 }));
 
@@ -177,10 +180,8 @@ const DashboardLayout = () => {
                 setBoards([...boards, newBoard])
 
               } else {
-                for (let board in boards) {
-                  if (board.title !== tag) {
-                    setBoards([...boards, newBoard])
-                  }
+                if (!Object.values(boards).includes(tag)) {
+                  setBoards([...boards, newBoard])
                 }
 
               }
