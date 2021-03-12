@@ -26,8 +26,6 @@ import {
 } from 'react-feather';
 import NavItem from './navItem';
 import { ReactComponent as Logo } from '../../../assets/Logo.svg'
-//import Logo from '../../../assets/claritylogo.png';
-
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -113,8 +111,10 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
       <Box p={2}
         mt={2.5}
         mb={5}
-        ml={2.5}>
-        <Logo />
+        ml={2.5} 
+        component={RouterLink}
+        to={'/app/dashboard'}>
+      <Logo />
       </Box>
       <Box p={2}
         mb={5}

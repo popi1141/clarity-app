@@ -22,7 +22,12 @@ import {
   MenuItem,
   Select,
   TextField,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -36,10 +41,13 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CloseIcon from '@material-ui/icons/Close';
 import PushPin from '../../../assets/PushPin.js'
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,16 +61,37 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex'
   },
+  datePicker: {
+    marginRight: '2%',
+  },
+  appStatusForm: {
+    minWidth: '20vh',
+    marginRight: '2%',
+  },
+  appStatusLabel: {
+    backgroundColor: theme.palette.background.default,
+    paddingLeft: '5%',
+    paddingRight: '5%',
+  },
   jobUrlButton: {
     color: theme.palette.primary.main,
     borderColor: theme.palette.primary.main,
-    borderRadius: '30px'
+    borderRadius: '30px',
+    "&&:hover": {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white
+    },
   },
-  deadlineButton: {
+  deadlineButtonClose: {
     backgroundColor: theme.palette.highlight.pink,
     borderRadius: '30px',
     marginRight: '2%',
     color: 'white'
+  },
+  deadlineButtonNormal: {
+    borderRadius: '30px',
+    marginRight: '2%',
+    color: 'black'
   },
   dataButton: {
     marginRight: '2%',
@@ -84,8 +113,20 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     marginRight: theme.spacing(8),
     fontSize: '12px'
+  },
+  keyDetailsLabel: {
+    marginRight: theme.spacing(0.8),
+  },
+  companyText: {
+    fontWeight: '500',
+  },
+  jobTitle: {
+    fontWeight: '700'
+  },
+  deleteButton: {
+    backgroundColor: 'red'
   }
-  }));
+}));
 
 const JobCard = ({
   className,
@@ -138,14 +179,13 @@ const JobCard = ({
       tags: job.tags,
       notes: job.notes
     });
-    console.log(job.url)
   }
 
   // calculate time since job was posted
-  const calculateTimeDiff = (postedDate) => {
+  const calculateTimeDiff = (date) => {
     const currDate = new Date()
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-    const diffDays = Math.round(Math.abs((currDate - postedDate) / oneDay));
+    const diffDays = Math.round(Math.abs((currDate - date) / oneDay));
     return diffDays
   }
 
@@ -175,7 +215,7 @@ const JobCard = ({
     const uid = localStorage.getItem("uid")
     const newData = values
     newData.priority = !values.priority
- 
+
     setValues(({ priority, ...prevState }) => ({
       ...prevState,
       priority: !priority
@@ -288,8 +328,36 @@ const JobCard = ({
 
     toggleEditing(false)
     setOpen(false);
-    setInitialEditability(!initialEditability)
+    //setInitialEditability(!initialEditability)
   }
+
+  const handleDeleteCard = () => {
+    const uid = localStorage.getItem("uid")
+    console.log(job.id)
+
+
+    const updateRef = firebase.firestore()
+      .collection('users')
+      .doc(uid)
+      .collection('cards')
+      .doc(job.id)
+      .delete()
+      .then(() => {
+        console.log('Deleting doc' + job.id)
+      })
+      .then(() => {
+        updatePriorityLists()
+        handleClose()
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+  }
+
+  const [deleteModalShow, setDeleteModalShow] = useState(false);
+
+  const handleClose = () => setDeleteModalShow(false);
+  const handleDeleteModalShow = () => setDeleteModalShow(true);
 
   const [chipVal, setChipValue] = useState(false)
   const handleChipDelete = () => {
@@ -306,7 +374,7 @@ const JobCard = ({
           display="flex">
 
           <Box m={5}>
-            <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary"></PushPin>
+            <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary" />
           </Box>
           <Box
             display="flex"
@@ -389,12 +457,13 @@ const JobCard = ({
                 display="flex"
                 justifyContent="flex-start"
                 flexDirection="column"
-                mb={3}
+                mb={2}
               >
                 <Typography
                   color="textPrimary"
                   gutterBottom
                   variant="h2"
+                  className={classes.jobTitle}
                 >
                   {values.title ? values.title : defaultValues.title}
                 </Typography>
@@ -404,23 +473,25 @@ const JobCard = ({
                     color="textPrimary"
                     display="inline"
                     variant="body1"
+                    className={`${classes.keyDetailsLabel} ${classes.companyText}`}
                   >
                     {values.company ? values.company : defaultValues.company}
                   </Typography>
+                  <LocationOnIcon style={{ color: '#ABB2BD', marginBottom: '-5px' }} />
                   <Typography
                     color="textSecondary"
                     display="inline"
-                    variant="body2"
+                    variant="body1"
+                    className={classes.keyDetailsLabel}
                   >
-                    <LocationOnIcon />
+
                     {values.location ? values.location : defaultValues.location}
                   </Typography>
-
                 </Box>
 
               </Box>}
 
-            <Box p={2}>
+            <Box paddingBottom={1}>
               <Grid
                 container
                 justify="space-between"
@@ -438,6 +509,7 @@ const JobCard = ({
                       label="Deadline"
                       value={values.deadline}
                       onChange={(newValue) => handleDeadlineChange(newValue)}
+                      className={classes.datePicker}
                     />
                     <DatePicker
                       disableToolbar
@@ -445,18 +517,23 @@ const JobCard = ({
                       label="Posted Date"
                       value={values.postedDate}
                       onChange={(newValue) => handlePostedDateChange(newValue)}
+                      className={classes.datePicker}
                     />
-
-                    <FormControl variant="outlined" className={classes.formControl}>
-                      <InputLabel>Application Status</InputLabel>
+                    <FormControl variant="outlined" className={classes.appStatusForm}>
+                      <InputLabel htmlFor="outlined-app-status" className={classes.appStatusLabel}>Application Status</InputLabel>
                       <Select
                         className={classes.selectDropdown}
                         value={values.progress}
                         onChange={handleInputChange('progress')}
+                        inputProps={{
+                          name: 'app-status',
+                          id: 'outlined-app-status',
+                        }}
                       >
                         {appStatusOptions.map((item) => {
                           return (<MenuItem value={item.value}>{item.value}</MenuItem>)
                         })}
+
 
                       </Select>
                     </FormControl>
@@ -479,12 +556,20 @@ const JobCard = ({
                     className={classes.statsItem}
                     item
                   >
-                    <Chip label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
-                      + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'} />
-                    <Chip label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
-                      : 'Posted: N/A'} />
-
-                    <Chip label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress} />
+                    <Chip
+                      label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
+                        + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'}
+                      className={calculateTimeDiff(values.deadline) < 5 ? classes.deadlineButtonClose : classes.deadlineButtonNormal}
+                    />
+                    <Chip
+                      label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
+                        : 'Posted: N/A'}
+                      className={classes.dataButton}
+                    />
+                    <Chip
+                      label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress}
+                      className={classes.dataButton}
+                    />
 
                     <Chip
                       label="Job Posting URL"
@@ -510,6 +595,54 @@ const JobCard = ({
           <Box m={5} onClick={() => handleExpandClick()}>
             {open ? <ExpandMore /> : <ExpandLess />}
 
+          </Box>
+
+          <Box m={5} >
+            <DeleteIcon onClick={() => handleDeleteModalShow()} />
+            {deleteModalShow ? <Dialog open={deleteModalShow} onClose={handleClose} className={classes.dialog}>
+              {/* <form onSubmit={handleDeleteCard}> */}
+              <DialogTitle className={classes.title}>
+                <Grid container spacing={20}>
+                  <Grid item md={10} xs={12}>
+                    <Typography align="left" gutterBottom variant="h5">
+                      Delete Card
+                      </Typography>
+                  </Grid>
+                  <Grid item md={2} xs={12}>
+                    <IconButton
+                      className={classes.closeIcon}
+                      onClick={handleClose}
+                      aria-label="close"
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </DialogTitle>
+              <DialogContent>
+                <Typography>Are you sure you want to delete this card? </Typography>
+              </DialogContent>
+              <Divider />
+              <DialogActions>
+                <Button
+                  className={classes.cancelButton}
+                  onClick={handleClose}
+                  variant="contained"
+                >
+                  Cancel
+            </Button>
+                <Button
+                  className={classes.deleteButton}
+                  type="submit"
+                  variant="contained"
+                  onClick={handleDeleteCard}
+                >
+                  Delete
+            </Button>
+              </DialogActions>
+              {/* </form> */}
+            </Dialog>
+              : null}
           </Box>
         </Box>
 
