@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -116,6 +116,13 @@ const DashboardLayout = () => {
   }
 
 
+  const jobsEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    
+  }
+
+
   const createNewCard = async (url) => {
     const newCard = {
       title: null,
@@ -145,14 +152,15 @@ const DashboardLayout = () => {
         newCard.id = docRef.id
         setregPriorityJobs([...regPriorityJobs, newCard])
         console.log("Document written with ID: ", docRef.id);
+        jobsEndRef.current.scrollIntoView({ behavior: "smooth" })
+        setInitialEditability(!initialEditability)
+
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
       });
 
 
-
-    setInitialEditability(!initialEditability)
 
   }
 
@@ -213,7 +221,7 @@ const DashboardLayout = () => {
     getUserData();
     //document.body.style.backgroundColor = '#F4F6F8';
   }, []);
-  
+
   return (
     <div className={classes.root}>
       <NavBar
@@ -242,6 +250,7 @@ const DashboardLayout = () => {
                   initialEditability={initialEditability}
                   setInitialEditability={setInitialEditability}
                   updatePriorityLists={updatePriorityLists}
+                  ref={jobsEndRef}
                 />
               </Route>
               <Route path="/app/settings"  >
@@ -255,6 +264,7 @@ const DashboardLayout = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

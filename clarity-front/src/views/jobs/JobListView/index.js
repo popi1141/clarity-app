@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef } from 'react';
 import {
   Box,
   Container,
@@ -7,6 +7,8 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+
 import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 //import Toolbar from './Toolbar';
@@ -19,16 +21,16 @@ const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius: '50px',
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
-    paddingTop: theme.spacing(5),
+    paddingTop: theme.spacing(7),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
   extender: {
-    content:"",
+    content: "",
     backgroundColor: theme.palette.background.dark,
     position: 'sticky',
-    height: '80vh',
+    height: '100%',
     width: '4000px',
     zIndex: '-5',
     left: '-500px',
@@ -70,18 +72,28 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const JobListView = ({
-  handlePriorityChangeToHigh,
-  handlePriorityChangeToReg,
-  highPriorityJobs,
-  regPriorityJobs,
-  initialEditability,
-  setInitialEditability,
-  updatePriorityLists
-}) => {
+const JobListView = forwardRef((
+  props,
+  ref
+) => {
   const classes = useStyles();
+  const {
+    handlePriorityChangeToHigh,
+    handlePriorityChangeToReg,
+    highPriorityJobs,
+    regPriorityJobs,
+    initialEditability,
+    setInitialEditability,
+    updatePriorityLists,
+  } = props;
 
-  
+  // const divRef = useRef(null);
+
+  // useEffect(() => {
+  //   divRef.current.scrollIntoView({ behavior: 'smooth' });
+  // });
+
+
   return (
     <Page
       className={classes.root}
@@ -121,7 +133,7 @@ const JobListView = ({
           Regular Priority
         </Typography>
 
-        <Box mt={3}>
+        <Box mt={3} >
           {regPriorityJobs.map((job, i) => (
             <JobCard
               className={classes.regJobCard}
@@ -135,22 +147,23 @@ const JobListView = ({
             />
           ))}
         </Box>
-
         <Box
+          ref={ref}
           mt={3}
           display="flex"
           justifyContent="center"
         >
           <Pagination
+
             color="primary"
             count={3}
             size="small"
           />
         </Box>
-        <Container className={classes.extender}/>
+        <Container className={classes.extender} />
       </Container>
     </Page>
   );
-};
+});
 
 export default JobListView;
