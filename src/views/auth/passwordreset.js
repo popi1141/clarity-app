@@ -14,7 +14,6 @@ import Container from '@material-ui/core/Container';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import { Link } from 'react-router-dom';
-import Snackbar from '@material-ui/core/Snackbar';
 
 const PasswordReset = () => {
     const classes = useStyles();
@@ -22,7 +21,6 @@ const PasswordReset = () => {
     const [email, setEmail] = useState("");
     const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
     const [error, setError] = useState(null);
-    const [openError, setOpenError] = useState(false)
 
     const handleChange = event => {
         const { name, value } = event.currentTarget;
@@ -44,7 +42,6 @@ const PasswordReset = () => {
             .catch((error) => {
                 setError(error.message);
                 setEmailHasBeenSent(null);
-                setOpenError(true)
             });
     };
 

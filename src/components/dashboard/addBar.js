@@ -54,11 +54,7 @@ const AddBar = ({createNewCard}) => {
   const handleURLChange = (event) => {
     setURL(event.target.value)
   }
-
-  const handleAdd = (url) => {
-    createNewCard(url)
-  }
-
+  
   return (
     <form className={classes.form}>
       <View style={styles.view} >

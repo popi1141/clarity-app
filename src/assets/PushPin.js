@@ -2,8 +2,6 @@ import React from 'react';
 import {
     SvgIcon
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { StayPrimaryLandscape } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
 
 

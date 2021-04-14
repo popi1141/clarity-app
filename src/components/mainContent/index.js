@@ -1,14 +1,10 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
-import TopBar from './TopBar';
 import SignIn from '../../views/auth/signin';
-import NotFoundView from '../../views/errors/NotFoundView';
 import SignUp from '../../views/auth/signup';
 import SignOut from '../../views/auth/signout';
 import PasswordReset from '../../views/auth/passwordreset';

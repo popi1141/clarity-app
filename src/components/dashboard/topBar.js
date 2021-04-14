@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   AppBar,
-  Badge,
   Box,
   Hidden,
   IconButton,
   Toolbar,
   Avatar,
-  FormControl,
-  InputLabel,
-  Input,
-  FormGroup,
   makeStyles
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBar from './addBar.js';
-//import Logo from 'src/components/Logo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,7 +37,7 @@ const TopBar = ({
   ...rest
 }) => {
   const classes = useStyles();
-  const [notifications] = useState([]);
+  //const [notifications] = useState([]);
 
   const user = {
     avatar: '/static/images/avatars/avatar_6.png',

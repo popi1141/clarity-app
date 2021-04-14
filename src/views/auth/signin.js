@@ -15,7 +15,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import { Link, useHistory } from 'react-router-dom';
-import { useUser } from 'reactfire';
 import Alert from '@material-ui/lab/Alert';
 
 

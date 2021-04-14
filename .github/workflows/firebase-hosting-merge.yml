@@ -23,5 +23,4 @@ jobs:
           projectId: clarity-app-58305
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
-          FIREBASE_PROJECT_PATH: clarity-front
 

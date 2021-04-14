@@ -1,4 +1,4 @@
-import React, { Component, createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import 'firebase/auth'
 import { useFirebaseApp } from 'reactfire';
 
@@ -9,11 +9,11 @@ const UserProvider = ({ ...props }) => {
 
     const firebase = useFirebaseApp();
 
-    const useEffect = () => {
+    useEffect(() => {
         firebase.auth().onAuthStateChanged(userAuth => {
             setUser(userAuth);
         });
-    };
+    });
 
     return (
         <UserContext.Provider value={user}>

@@ -2,19 +2,12 @@ import React, { forwardRef } from 'react';
 import {
   Box,
   Container,
-  Grid,
-  Card,
   makeStyles,
   Typography
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
-
 import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
-//import Toolbar from './Toolbar';
 import JobCard from './JobCard';
-import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,13 +79,6 @@ const JobListView = forwardRef((
     setInitialEditability,
     updatePriorityLists,
   } = props;
-
-  // const divRef = useRef(null);
-
-  // useEffect(() => {
-  //   divRef.current.scrollIntoView({ behavior: 'smooth' });
-  // });
-
 
   return (
     <Page

@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { FirebaseAppProvider } from 'reactfire';
 import firebaseConfig from './services/firebaseConfig.js';
-import UserProvider from './providers/userProvider.js';
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(

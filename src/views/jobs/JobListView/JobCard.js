@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -12,11 +11,7 @@ import {
   Chip,
   Collapse,
   makeStyles,
-  SvgIcon,
   FormControl,
-  FormLabel,
-  FormHelperText,
-  Input,
   InputLabel,
   OutlinedInput,
   MenuItem,
@@ -33,13 +28,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import { DatePicker } from "@material-ui/pickers";
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
-import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
@@ -141,7 +131,7 @@ const JobCard = ({
 }) => {
   const classes = useStyles();
   const [values, setValues] = useState({})
-  const [defaultValues, setDefaultValues] = useState({
+  const defaultValues = {
     title: 'Untitled',
     location: 'Unspecified Location',
     company: 'Unspecified Company',
@@ -155,11 +145,11 @@ const JobCard = ({
     url: '',
     tags: '',
     notes: 'No notes added'
-  })
+  }
 
   useEffect(() => {
     setInitialData()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // retrieve organized card data from job lists
   const setInitialData = () => {
@@ -196,10 +186,9 @@ const JobCard = ({
   };
 
   // notifications
-  const [notifsOn, setNotifsOn] = useState(false)
-  const handleNotifs = () => {
-    setNotifsOn(!notifsOn);
-  };
+  // const handleNotifs = () => {
+  //   setNotifsOn(!notifsOn);
+  // };
 
   // toggle editing
   const [editing, toggleEditing] = useState(initialEditability)
@@ -209,7 +198,6 @@ const JobCard = ({
   }
 
   // change priority
-  const [priorityStatus, setPriority] = useState(null)
   const changePriority = async (id) => {
 
     const uid = localStorage.getItem("uid")
@@ -221,7 +209,7 @@ const JobCard = ({
       priority: !priority
     }));
 
-    const updateRef = await firebase.firestore()
+    await firebase.firestore()
       .collection('users')
       .doc(uid)
       .collection('cards')
@@ -316,7 +304,7 @@ const JobCard = ({
   const handleSaveData = () => {
     const uid = localStorage.getItem("uid")
 
-    const updateRef = firebase.firestore()
+    firebase.firestore()
       .collection('users')
       .doc(uid)
       .collection('cards')
@@ -336,7 +324,7 @@ const JobCard = ({
     console.log(job.id)
 
 
-    const updateRef = firebase.firestore()
+    firebase.firestore()
       .collection('users')
       .doc(uid)
       .collection('cards')
@@ -557,12 +545,12 @@ const JobCard = ({
                     item
                   >
                     <Chip
-                      label={values.deadline && values.deadline != '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
+                      label={values.deadline && values.deadline !== '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
                         + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'}
                       className={calculateTimeDiff(values.deadline) < 5 ? classes.deadlineButtonClose : classes.deadlineButtonNormal}
                     />
                     <Chip
-                      label={values.postedDate && values.postedDate != '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
+                      label={values.postedDate && values.postedDate !== '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
                         : 'Posted: N/A'}
                       className={classes.dataButton}
                     />

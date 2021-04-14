@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import NavBar from './navBar';
 import TopBar from './topBar';
-import MainLayout from '../mainContent/index.js';
 import AccountView from '../../views/account/AccountView';
 import JobListView from '../../views/jobs/JobListView';
 import SettingsView from '../../views/settings/SettingsView';
 import NotFoundView from '../../views/errors/NotFoundView';
-import { Settings } from 'react-native';
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
@@ -64,13 +60,8 @@ const DashboardLayout = () => {
     const toChange = regPriorityJobs.find(job => job.id === id)
     toChange.priority = !toChange.priority
     sethighPriorityJobs([...highPriorityJobs, toChange]);
-    console.log(id)
 
-    console.log(regPriorityJobs.filter((job) => job.priority !== true))
     setregPriorityJobs(regPriorityJobs => regPriorityJobs.filter((job) => job.priority !== true));
-    console.log(regPriorityJobs)
-    console.log(highPriorityJobs)
-
   }
 
   const handlePriorityChangeToReg = (id) => {
@@ -78,17 +69,14 @@ const DashboardLayout = () => {
     toChange.priority = !toChange.priority
     setregPriorityJobs([...regPriorityJobs, toChange]);
 
-    const dataDelete = highPriorityJobs.filter((job) => job.id !== id)
     sethighPriorityJobs(highPriorityJobs => highPriorityJobs.filter((job) => job.priority !== false));
-    console.log(regPriorityJobs)
-    console.log(highPriorityJobs)
   }
 
   const updatePriorityLists = async () => {
     try {
       sethighPriorityJobs([])
       setregPriorityJobs([])
-      const documentSnapshot = await firebase.firestore()
+      await firebase.firestore()
         .collection('users')
         .doc(uid).collection('cards')
         .get()
@@ -97,12 +85,13 @@ const DashboardLayout = () => {
             return { id: doc.id, ...doc.data() }
           })
 
-          cards.map((card) => {
+          cards.forEach((card) => {
             if (card.priority) {
               sethighPriorityJobs(highPriorityJobs => [...highPriorityJobs, card])
             } else {
               setregPriorityJobs(regPriorityJobs => [...regPriorityJobs, card])
             }
+            return
           })
 
         })
@@ -117,11 +106,6 @@ const DashboardLayout = () => {
 
 
   const jobsEndRef = useRef(null)
-
-  const scrollToBottom = () => {
-    
-  }
-
 
   const createNewCard = async (url) => {
     const newCard = {
@@ -168,7 +152,7 @@ const DashboardLayout = () => {
 
   const getUserData = async () => {
     try {
-      const documentSnapshot = await firebase.firestore()
+      await firebase.firestore()
         .collection('users')
         .doc(uid).collection('cards')
         .get()
@@ -177,23 +161,14 @@ const DashboardLayout = () => {
             return { id: doc.id, ...doc.data() }
           })
 
-
-          // const card = doc.data()
-
-          cards.map((card) => {
+          cards.forEach((card) => {
             card.tags.forEach((tag) => {
               const newBoard = {
                 href: '/app/dashboard/' + tag,
                 title: tag
               }
-              if (boards.length === 0) {
-                setBoards([...boards, newBoard])
-
-              } else {
-                if (!Object.values(boards).includes(tag)) {
-                  setBoards([...boards, newBoard])
-                }
-
+              if (!Object.values(boards).includes(tag)) {
+                setBoards(boards => [...boards, newBoard])
               }
 
             })
@@ -219,8 +194,7 @@ const DashboardLayout = () => {
   // Get user on mount
   useEffect(() => {
     getUserData();
-    //document.body.style.backgroundColor = '#F4F6F8';
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={classes.root}>

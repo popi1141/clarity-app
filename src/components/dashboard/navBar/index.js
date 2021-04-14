@@ -2,47 +2,16 @@ import React, { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Button,
-  Divider,
   Drawer,
   Hidden,
   List,
   Typography,
   makeStyles,
-  Icon,
-  SvgIcon
 } from '@material-ui/core';
-import {
-  AlertCircle as AlertCircleIcon,
-  BarChart as BarChartIcon,
-  Lock as LockIcon,
-  Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
-  User as UserIcon,
-  UserPlus as UserPlusIcon,
-  Users as UsersIcon
-} from 'react-feather';
 import NavItem from './navItem';
 import { ReactComponent as Logo } from '../../../assets/Logo.svg'
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
-
-const items = [
-  {
-    href: '/app/dashboard',
-    title: 'UX Jobs'
-  },
-  {
-    href: '/app/dashboard',
-    title: 'Dev Jobs'
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   mobileDrawer: {

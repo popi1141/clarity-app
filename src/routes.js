@@ -1,13 +1,10 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 import DashboardLayout from './components/dashboard/index.js';
 import MainLayout from './components/mainContent/index.js';
 import AccountView from './views/account/AccountView';
 import JobListView from './views/jobs/JobListView';
-import DashboardView from './views/reports/DashboardView';
 import SignIn from './views/auth/signin';
 import NotFoundView from './views/errors/NotFoundView';
-//import ProductListView from './views/product/ProductListView';
 import SignUp from './views/auth/signup';
 import SettingsView from './views/settings/SettingsView';
 import SignOut from './views/auth/signout';
