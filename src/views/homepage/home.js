@@ -7,7 +7,6 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import BannerImage1 from '../../assets/banner_illustration_1.png'
 import FeatureImage1 from '../../assets/feature_image_1.png'
 import FeatureImage2 from '../../assets/feature_image_2.png'
