@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core';
 import SignIn from '../../views/auth/signin';
 import SignUp from '../../views/auth/signup';
 import SignOut from '../../views/auth/signout';
+import HomePage from '../../views/homepage/home';
 import PasswordReset from '../../views/auth/passwordreset';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,9 +35,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MainLayout = () => {
+const GeneralLayout = () => {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <div className={classes.wrapper}>
@@ -44,7 +44,7 @@ const MainLayout = () => {
           <div className={classes.content}>
             <Switch>
               <Route exact path="/"  >
-                <SignIn />
+                <HomePage/>
               </Route>
               <Route path="/login" >
                 <SignIn />
@@ -58,9 +58,9 @@ const MainLayout = () => {
               <Route path="/signup" >
                 <SignUp />
               </Route>
-              {/* <Route path="*" component={<NotFoundView />} > 
-                <NotFoundView />
-              </Route> */}
+              <Route path="/*" > 
+                <SignIn />
+              </Route>
             </Switch>
           </div>
         </div>
@@ -69,4 +69,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default GeneralLayout;

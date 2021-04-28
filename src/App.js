@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import theme from './theme';
 import DashboardLayout from './components/dashboard/index.js';
-import MainLayout from './components/mainContent/index.js';
+import GeneralLayout from './components/generalContent/index.js';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
@@ -20,7 +20,7 @@ const App = () => {
         <BrowserRouter>
           <Switch>
           <Route path='/app/*' component={DashboardLayout} />
-            <Route path='/*' component={MainLayout} />
+          <Route path='/*' component={GeneralLayout} />
           </Switch>
         </BrowserRouter>
       </MuiPickersUtilsProvider>

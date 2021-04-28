@@ -83,7 +83,7 @@ const JobListView = forwardRef((
   return (
     <Page
       className={classes.root}
-      title="Products"
+      title="Clarity - Your Job Hunting Aggregator"
     >
       <Container maxWidth={false}>
         <Typography

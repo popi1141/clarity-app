@@ -22,7 +22,7 @@ const routes = [
     ]
   },
   {
-    path: '/',
+    path: 'asdasdas',
     element: <MainLayout />,
     children: [
       { path: 'login', element: <SignIn /> },
@@ -32,7 +32,7 @@ const routes = [
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <SignIn /> },
     ]
-  }
+  },
 ];
 
 export default routes;
