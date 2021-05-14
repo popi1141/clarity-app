@@ -216,7 +216,6 @@ const JobCard = ({
       .doc(job.id)
       .set(values)
       .then(function () {
-        console.log("Updated");
         updatePriorityLists()
 
       });
@@ -311,7 +310,6 @@ const JobCard = ({
       .doc(job.id)
       .set(values)
       .then(function () {
-        console.log("Updated");
       });
 
     toggleEditing(false)
@@ -330,9 +328,6 @@ const JobCard = ({
       .collection('cards')
       .doc(job.id)
       .delete()
-      .then(() => {
-        console.log('Deleting doc' + job.id)
-      })
       .then(() => {
         updatePriorityLists()
         handleClose()
