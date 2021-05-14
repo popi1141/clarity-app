@@ -158,7 +158,7 @@ const DashboardLayout = () => {
 
   const [boards, setBoards] = useState([])
 
-  const [apiData, setAPIData] = useState({})
+  //const [apiData, setAPIData] = useState({})
 
   const getAPIData = async (url) => {
     console.log(url)
