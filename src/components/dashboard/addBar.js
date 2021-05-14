@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddBar = ({createNewCard}) => {
+const AddBar = ({createNewCard},) => {
   const classes = useStyles()
   const [url, setURL] = useState(null)
 

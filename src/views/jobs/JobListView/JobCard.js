@@ -124,8 +124,6 @@ const JobCard = ({
   i,
   handlePriorityChangeToReg,
   handlePriorityChangeToHigh,
-  initialEditability,
-  setInitialEditability,
   updatePriorityLists,
   ...props
 }) => {
@@ -141,10 +139,11 @@ const JobCard = ({
     companyContactName: '',
     companyContactEmail: '',
     appMaterial: [],
-    priority: false,
+    priority: true,
     url: '',
     tags: '',
-    notes: 'No notes added'
+    notes: 'No notes added',
+    initialEditability: false
   }
 
   useEffect(() => {
@@ -167,7 +166,8 @@ const JobCard = ({
       priority: job.priority,
       url: job.url,
       tags: job.tags,
-      notes: job.notes
+      notes: job.notes,
+      initialEditability: job.initialEditability
     });
   }
 
@@ -180,7 +180,7 @@ const JobCard = ({
   }
 
   // expand/contract card 
-  const [open, setOpen] = useState(initialEditability)
+  const [open, setOpen] = useState(false)
   const handleExpandClick = () => {
     setOpen(!open);
   };
@@ -191,7 +191,7 @@ const JobCard = ({
   // };
 
   // toggle editing
-  const [editing, toggleEditing] = useState(initialEditability)
+  const [editing, toggleEditing] = useState(values.initialEditability)
   const handleEditingClick = () => {
     toggleEditing(!editing)
     setOpen(true);

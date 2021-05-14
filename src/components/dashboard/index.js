@@ -13,8 +13,8 @@ import NotFoundView from '../../views/errors/NotFoundView';
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
-import rp from "request-promise";
-import { parse } from 'node-html-parser';
+//import rp from "request-promise";
+//import { parse } from 'node-html-parser';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,7 +52,7 @@ const DashboardLayout = () => {
 
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const [initialEditability, setInitialEditability] = useState(false)
+  const [initialEditability, setInitialEditability] = useState(true)
   const [highPriorityJobs, sethighPriorityJobs] = useState([]);
   const [regPriorityJobs, setregPriorityJobs] = useState([]);
 
@@ -110,31 +110,7 @@ const DashboardLayout = () => {
   const jobsEndRef = useRef(null)
 
   const createNewCard = async (url) => {
-    var parsedURL = new URL(url);
-
-    if (parsedURL.hostname === "www.indeed.com") {
-      getAPIData(url).then(async function () {
-        await firebase.firestore()
-          .collection('users')
-          .doc(uid)
-          .collection('cards')
-          .add(
-            newCard
-          )
-          .then((docRef) => {
-            newCard.id = docRef.id
-            sethighPriorityJobs([...highPriorityJobs, newCard])
-            //jobsEndRef.current.scrollIntoView({ behavior: "smooth" })
-            setInitialEditability(!initialEditability)
-
-          })
-          .catch((error) => {
-            console.error("Error adding document: ", error);
-          });
-
-
-      })
-    }
+    //var parsedURL = new URL(url);
 
     const newCard = {
       title: null,
@@ -149,8 +125,38 @@ const DashboardLayout = () => {
       priority: true,
       url: url,
       tags: [],
-      notes: null
+      notes: null,
+      initialEditability: true
     }
+
+    if (isValidHttpUrl(url)) {
+      await firebase.firestore()
+        .collection('users')
+        .doc(uid)
+        .collection('cards')
+        .add(
+          newCard
+        )
+        .then((docRef) => {
+          newCard.id = docRef.id
+          sethighPriorityJobs([...highPriorityJobs, newCard])
+          //jobsEndRef.current.scrollIntoView({ behavior: "smooth" })
+          //setInitialEditability(false)
+
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    }
+    // if (parsedURL.hostname === "www.indeed.com") {
+    //   getAPIData(url).then(async function () {
+
+
+
+    //   })
+    // }
+
+
 
 
 
@@ -160,30 +166,30 @@ const DashboardLayout = () => {
 
   //const [apiData, setAPIData] = useState({})
 
-  const getAPIData = async (url) => {
-    console.log(url)
-    if (isValidHttpUrl(url)) {
-      //var jobID = url.substr(url.lastIndexOf('=') + 1);
-      rp({
-        url: `https://corsanywhere.herokuapp.com/${url}`,
-        headers: {
-          'User-Agent': 'Request-Promise'
-        }
-      })
-        .then(html => {
-          console.log(html)
-          const root = parse(html);
-          console.log(root.querySelector('.jobsearch-JobInfoHeader-title'));
+  // const getAPIData = async (url) => {
+  //   console.log(url)
+  //   if (isValidHttpUrl(url)) {
+  //     //var jobID = url.substr(url.lastIndexOf('=') + 1);
+  //     rp({
+  //       url: `https://corsanywhere.herokuapp.com/${url}`,
+  //       headers: {
+  //         'User-Agent': 'Request-Promise'
+  //       }
+  //     })
+  //       .then(html => {
+  //         console.log(html)
+  //         const root = parse(html);
+  //         console.log(root.querySelector('.jobsearch-JobInfoHeader-title'));
 
-        })
-        .catch(function (err) {
-          console.log("crawl failed");
-          console.log(err)
-        });
+  //       })
+  //       .catch(function (err) {
+  //         console.log("crawl failed");
+  //         console.log(err)
+  //       });
 
-    }
+  //   }
 
-  }
+  // }
 
   const isValidHttpUrl = (string) => {
     let url;
