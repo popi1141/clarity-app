@@ -1,10 +1,15 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import {
   Box,
   Container,
   makeStyles,
-  Typography
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 import JobCard from './JobCard';
@@ -62,8 +67,24 @@ const useStyles = makeStyles((theme) => ({
   },
   bold: {
     fontWeight: 600
+  },
+  selectDropdown: {
+    width: theme.spacing(40)
+  },
+  placeholder: {
+    color: 'black'
   }
 }));
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiOutlinedInput: {
+      root: {
+        borderRadius: "30px"
+      }
+    }
+  }
+});
 
 const JobListView = forwardRef((
   props,
@@ -78,7 +99,40 @@ const JobListView = forwardRef((
     initialEditability,
     setInitialEditability,
     updatePriorityLists,
+    setregPriorityJobs,
+    sethighPriorityJobs
   } = props;
+
+  const [sortByValue, setSortByValue] = useState(null);
+
+  const sortByOptions = [
+    { value: 'Location' },
+    { value: 'Application Status' },
+    { value: 'Posted Date' },
+    { value: 'Deadline' },
+  ]
+
+  const handleSort = (prop) => (event) => {
+    setSortByValue(event.target.value)
+    if (event.target.value === "Deadline") {
+      regPriorityJobs.sort(function (a, b) {
+        return a.deadline.toDate() - b.deadline.toDate();
+      });
+      highPriorityJobs.sort(function (a, b) {
+        return a.deadline.toDate() - b.deadline.toDate();
+      });
+    } else if (event.target.value === "Posted Date") {
+      regPriorityJobs.sort(function (a, b) {
+        return b.postedDate.toDate() - a.postedDate.toDate();
+      });
+      highPriorityJobs.sort(function (a, b) {
+        return b.postedDate.toDate() - a.postedDate.toDate();
+      });
+    }
+    sethighPriorityJobs(highPriorityJobs)
+    setregPriorityJobs(regPriorityJobs)
+
+  };
 
   return (
     <Page
@@ -86,6 +140,35 @@ const JobListView = forwardRef((
       title="Clarity - Your Job Hunting Aggregator"
     >
       <Container maxWidth={false}>
+        <Box display="flex" justifyContent="flex-end">
+          <Box w={5}>
+            <FormControl variant="outlined" className={classes.sortByForm}>
+              <MuiThemeProvider theme={theme}>
+                <InputLabel htmlFor="outlined-sort-by" className={classes.sortByLabel}>Sort By</InputLabel>
+
+                <Select
+                  className={classes.selectDropdown}
+                  value={sortByValue}
+                  onChange={handleSort('sortBy')}
+                  displayEmpty
+                  inputProps={{ 'aria-label': 'Without label' }}
+                >
+                  <MenuItem value="" disabled selected>
+                    Sort By
+                </MenuItem>
+                  {sortByOptions.map((item) => {
+                    return (<MenuItem value={item.value}>{item.value}</MenuItem>)
+                  })}
+
+
+                </Select>
+              </MuiThemeProvider>
+
+
+            </FormControl>
+          </Box>
+        </Box>
+
         <Typography
           align="left"
           color="textPrimary"

@@ -277,6 +277,8 @@ const DashboardLayout = () => {
                   initialEditability={initialEditability}
                   setInitialEditability={setInitialEditability}
                   updatePriorityLists={updatePriorityLists}
+                  sethighPriorityJobs={sethighPriorityJobs}
+                  setregPriorityJobs={setregPriorityJobs}
                   ref={jobsEndRef}
                 />
               </Route>
