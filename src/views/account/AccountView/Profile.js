@@ -11,8 +11,9 @@ import {
   CardContent,
   Divider,
   Typography,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 
 const defaultUser = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -81,7 +82,22 @@ const Profile = ({ className, user, ...rest }) => {
         >
           Upload picture
         </Button>
+        
       </CardActions>
+      <Divider />
+        <Box
+          display="flex"
+          justifyContent="center"
+          p={2}
+        >
+          <Button
+                color="red"
+                variant="contained"
+                component={RouterLink}
+                to={'/logout'}>
+                Log Out
+          </Button>
+        </Box>
     </Card>
   );
 };

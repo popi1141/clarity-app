@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Container,
   Grid,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core';
 import Page from '../../../components/page/Page.js';
 import Profile from './Profile';
@@ -37,6 +37,7 @@ const Account = ({ user }) => {
             xs={12}
           >
             <Profile user={user} />
+            
           </Grid>
           <Grid
             item
@@ -47,6 +48,7 @@ const Account = ({ user }) => {
             <ProfileDetails user={user} />
           </Grid>
         </Grid>
+
       </Container>
     </Page>
   );
