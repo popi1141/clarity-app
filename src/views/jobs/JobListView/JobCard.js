@@ -57,11 +57,13 @@ const useStyles = makeStyles((theme) => ({
   appStatusForm: {
     minWidth: '20vh',
     marginRight: '2%',
+    fontSize: '10px'
   },
   appStatusLabel: {
     backgroundColor: theme.palette.background.default,
     paddingLeft: '5%',
     paddingRight: '5%',
+    width: theme.spacing(10),
   },
   jobUrlButton: {
     color: theme.palette.primary.main,
@@ -503,7 +505,7 @@ const JobCard = ({
                       className={classes.datePicker}
                     />
                     <FormControl variant="outlined" className={classes.appStatusForm}>
-                      <InputLabel htmlFor="outlined-app-status" className={classes.appStatusLabel}>Application Status</InputLabel>
+                      <InputLabel htmlFor="outlined-app-status" className={classes.appStatusLabel}> Status</InputLabel>
                       <Select
                         className={classes.selectDropdown}
                         value={values.progress}
