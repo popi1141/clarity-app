@@ -10,7 +10,7 @@ import {
   MenuItem
 } from '@material-ui/core';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { Pagination } from '@material-ui/lab';
+// import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 import JobCard from './JobCard';
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '100%',
     paddingTop: theme.spacing(7),
     paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(4),
     paddingRight: theme.spacing(2),
   },
   extender: {
@@ -69,7 +69,12 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600
   },
   selectDropdown: {
-    width: theme.spacing(40)
+    width: theme.spacing(25),
+    height: theme.spacing(6.5),
+    backgroundColor: 'white'
+  },
+  sortByLabel: {
+    fontSize: '1rem'
   },
   placeholder: {
     color: 'black'
@@ -107,8 +112,8 @@ const JobListView = forwardRef((
 
   const sortByOptions = [
     { value: 'Location' },
-    { value: 'Application Status' },
     { value: 'Posted Date' },
+    { value: 'Application Status' },
     { value: 'Deadline' },
   ]
 
@@ -140,8 +145,8 @@ const JobListView = forwardRef((
       title="Clarity - Your Job Hunting Aggregator"
     >
       <Container maxWidth={false}>
-        <Box display="flex" justifyContent="flex-end">
-          <Box w={5}>
+        <Box display="flex" justifyContent="flex-end" width="74vw">
+          <Box>
             <FormControl variant="outlined" className={classes.sortByForm}>
               <MuiThemeProvider theme={theme}>
                 <InputLabel htmlFor="outlined-sort-by" className={classes.sortByLabel}>Sort By</InputLabel>
@@ -155,7 +160,7 @@ const JobListView = forwardRef((
                 >
                   <MenuItem value="" disabled selected>
                     Sort By
-                </MenuItem>
+                  </MenuItem>
                   {sortByOptions.map((item) => {
                     return (<MenuItem value={item.value}>{item.value}</MenuItem>)
                   })}
@@ -173,13 +178,12 @@ const JobListView = forwardRef((
           align="left"
           color="textPrimary"
           gutterBottom
-          variant="h2"
-          className={classes.bold}
+          variant="h3"
         >
           High Priority
         </Typography>
 
-        <Box mt={3}>
+        <Box mt={3} mb={6}>
           {highPriorityJobs.map((job, i) => {
             return (<JobCard
               className={classes.highJobCard}
@@ -196,13 +200,12 @@ const JobListView = forwardRef((
           align="left"
           color="textPrimary"
           gutterBottom
-          variant="h2"
-          className={classes.bold}
+          variant="h3"
         >
           Regular Priority
         </Typography>
 
-        <Box mt={3} >
+        <Box mt={3} mb={6} >
           {regPriorityJobs.map((job, i) => (
             <JobCard
               className={classes.regJobCard}
@@ -222,12 +225,12 @@ const JobListView = forwardRef((
           display="flex"
           justifyContent="center"
         >
-          <Pagination
+          {/* <Pagination
 
             color="primary"
             count={3}
             size="small"
-          />
+          /> */}
         </Box>
         <Container className={classes.extender} />
       </Container>

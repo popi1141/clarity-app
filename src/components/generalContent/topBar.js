@@ -12,7 +12,9 @@ import { ReactComponent as Logo } from '../../assets/Logo.svg'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'white',
-    position: 'fixed'
+    position: 'fixed',
+    paddingTop: '16px',
+    paddingBottom: '16px',
   },
   logo: {
         maxWidth: 40,

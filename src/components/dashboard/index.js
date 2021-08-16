@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     flex: '1 1 auto',
     paddingTop: 80,
     [theme.breakpoints.up('lg')]: {
-      paddingLeft: theme.spacing(32)
+      paddingLeft: theme.spacing(28)
     },
     borderRadius: '30px 0px 0px 0px'
   },
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(3),
     flex: '1 1 auto',
     borderRadius: '30px 0px 0px 0px'
   }

@@ -15,10 +15,10 @@ import { ReactComponent as Logo } from '../../../assets/Logo.svg'
 
 const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
-    width: theme.spacing(32)
+    width: theme.spacing(28)
   },
   desktopDrawer: {
-    width: theme.spacing(32),
+    width: theme.spacing(28),
     borderRight: 0,
   },
   avatar: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '30px',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.white,
-    padding: '12px 48px 12px 24px',
+    padding: '12px 24px 12px 24px',
     '&:hover': {
       backgroundColor: theme.palette.primary.first,
 
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     
   },
   title: {
-    fontSize: '20px',
+    fontSize: '16px',
     fontWeight: 'medium',
     letterSpacing: '0.1px',
   },
@@ -52,7 +52,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   tags: {
-    letterSpacing: '0.2px'
+    letterSpacing: '0.2px',
+    color: theme.palette.text.grayThree,
+    fontSize: '0.8rem'
   },
   navItems: {
     textAlign: 'left'
@@ -87,27 +89,24 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
       </Box>
       <Box p={2}
         mb={5}
-        ml={2}
-        mr={3}>
+        ml={2}>
         <Button
           activeClassName={classes.active}
           className={classes.allPostingsButton}
           component={RouterLink}
           to={'/app/dashboard'}
         >
-          <Typography className={classes.title}>
+          <Typography variant="h5" className={classes.title}>
             All Postings
         </Typography>
         </Button>
 
       </Box>
       <Box
-        ml={7}
+        ml={5}
       >
-        <Box
-        mb={2}
-        >
-          <Typography variant="h3" className={classes.tags}>MY TAGS</Typography>
+        <Box>
+          <Typography className={classes.tags}>MY TAGS</Typography>
         </Box>
         <Box
           mb={2}

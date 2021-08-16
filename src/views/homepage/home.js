@@ -31,24 +31,28 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '30px',
         paddingTop: '10px',
         paddingBottom: '10px',
-        paddingLeft: '10px',
-        paddingRight: '10px',
+        paddingLeft: '20px',
+        paddingRight: '20px',
         textTransform: 'none',
-        maxWidth: '30%',
+        maxWidth: '24%',
         '&:hover': {
           backgroundColor: theme.palette.primary.main
         }
       },
       whiteSection: {
-        paddingLeft: '15%',
-        paddingRight: '15%'
+        paddingLeft: '10%',
+        paddingRight: '10%',
+        marginBottom: '40px',
+        marginTop: '48px'
       },
       itemsSection: {
         paddingLeft: '15%',
         paddingRight: '15%',
         paddingTop: '7%',
         paddingBottom: '5%',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop: '5%',
+        marginBottom: '5%'
       },
       teamSection: {
         paddingLeft: '15%',
@@ -59,13 +63,14 @@ const useStyles = makeStyles((theme) => ({
       },
       greySection: {
         paddingLeft: '15%',
-        backgroundColor: 'rgba(224, 224, 224, 0.21)'
+        backgroundColor: 'rgba(224, 224, 224, 0.21)',
       },
       finalSection: {
         width: '75%',
         paddingTop: '5%',
         paddingBottom: '5%',
-        backgroundColor: 'rgba(224, 224, 224, 0.21)'
+        backgroundColor: 'rgba(224, 224, 224, 0.21)',
+        marginBottom: '10%'
       },
       addBottomSpacing: {
           marginBottom: '40px'
@@ -86,17 +91,18 @@ const useStyles = makeStyles((theme) => ({
         color: "#ABB2BD",
     },
       addRightSpacing: {
-        marginRight: '100px'
+        marginRight: '160px'
     },
     addPaddingRightLight: {
-        paddingRight: '15%'
+        paddingRight: '0%'
     },
     addPaddingRight: {
-        paddingRight: '30%'
+        paddingRight: '10%'
     },
       sectionHeader: {
           fontFamily: "Roboto Black",
-          marginBottom: '5%'
+          marginBottom: '5%',
+          lineHeight: '1.5'
       },
       endingHeader: {
         fontFamily: "Roboto Black",
@@ -174,7 +180,7 @@ const HomePage = () => {
                                 <Typography variant="h3" className={classes.addBottomSpacingLight} component="h3">
                                 Track Application Status
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
+                                <Typography variant="body1" gutterBottom>
                                 Note which application materials are required to successfully put your best foot foward. 
                                 </Typography>
                             </Box>
@@ -185,7 +191,7 @@ const HomePage = () => {
                                 <Typography variant="h3" className={classes.addBottomSpacingLight} component="h3">
                                 Manage Required Materials
                                 </Typography>
-                                <Typography variant="body2" gutterBottom>
+                                <Typography variant="body1" gutterBottom>
                                 Note which application materials are required to successfully put your best foot foward. 
                                 </Typography>
                             </Box>
@@ -196,7 +202,7 @@ const HomePage = () => {
                                 <Typography variant="h3" className={classes.addBottomSpacingLight} component="h3">
                                 Add Personal Notes
                                 </Typography>
-                                <Typography variant="body2" gutterBottom css={{textAlign:'left'}}>
+                                <Typography variant="body1" gutterBottom css={{textAlign:'left'}}>
                                 Have other attributes to note when applying to jobs? No fear, add them to your persnoal notes section!
                                 </Typography>
                             </Box>

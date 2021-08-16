@@ -21,7 +21,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 'auto'
   },
   button: {
-    paddingLeft: '0px'
+    paddingLeft: '0px',
+    fontSize: '1rem',
+    fontWeight: '400',
+    textTransform: 'none',
+    lineHeight: '1',
+    marginLeft: theme.spacing(2)
   },
   active: {
     color: theme.palette.primary.main,

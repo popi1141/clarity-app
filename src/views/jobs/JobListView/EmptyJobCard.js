@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
   },
   statsIcon: {
     marginRight: theme.spacing(1)
+  },
+  cardContent: {
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(2)
   }
 }));
 
@@ -76,7 +80,7 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
       className={clsx(classes.root, className)}
       {...props}
     >
-      <CardContent >
+      <CardContent className={classes.cardContent}>
         <Box
           display="flex">
 
@@ -201,7 +205,7 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
             flexDirection="column"
             m={5}
           >
-            <Chip label={'Job Posting URL >'} />
+            <Chip label={'Job Post URL >'} />
             <Box
               display="flex"
               justifyContent="flex-start"

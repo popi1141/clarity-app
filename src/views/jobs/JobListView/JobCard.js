@@ -45,18 +45,20 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     borderRadius: '10px',
     boxShadow: '0 3px 10px 0 rgba(0, 0, 0, 0.1)',
-    margin: theme.spacing(2, 0, 2, 0)
+    padding: theme.spacing(0, 4, 0, 0),
+    margin: theme.spacing(2, 0, 2, 0),
+    width: '74vw'
   },
   statsItem: {
     alignItems: 'center',
     display: 'flex'
   },
   datePicker: {
-    marginRight: '2%',
+    marginRight: '24px',
   },
   appStatusForm: {
     minWidth: '20vh',
-    marginRight: '2%',
+    marginRight: '24px',
     fontSize: '10px'
   },
   appStatusLabel: {
@@ -66,28 +68,49 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(10),
   },
   jobUrlButton: {
-    color: theme.palette.primary.main,
+    color: '#6266EA !important',
     borderColor: theme.palette.primary.main,
-    borderRadius: '30px',
+    borderRadius: '40px',
+    height: '40px',
     "&&:hover": {
       backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white
+      color: 'white !important'
     },
+    fontSize: '1rem',
+    padding: theme.spacing(1, 1, 1, 1)
   },
   deadlineButtonClose: {
     backgroundColor: theme.palette.highlight.pink,
-    borderRadius: '30px',
+    borderRadius: '40px',
+    height: '40px',
     marginRight: '2%',
+    fontSize: '1rem',
+    padding: theme.spacing(1, 1.5, 1, 1.5),
     color: 'white'
   },
   deadlineButtonNormal: {
-    borderRadius: '30px',
+    borderRadius: '40px',
+    height: '40px',
     marginRight: '2%',
-    color: 'black'
+    backgroundColor: '#F4F4F4',
+    fontSize: '1rem',
+    padding: theme.spacing(1, 1.5, 1, 1.5)
+  },
+  customTag: {
+    borderRadius: '40px',
+    height: '40px',
+    marginRight: '2%',
+    backgroundColor: '#F4F4F4',
+    fontSize: '1rem',
+    padding: theme.spacing(1, 1.5, 1, 1.5)
   },
   dataButton: {
-    marginRight: '2%',
-    borderRadius: '30px'
+    marginRight: '12px',
+    borderRadius: '40px',
+    height: '40px',
+    fontSize: '1rem',
+    backgroundColor: '#F4F4F4',
+    padding: theme.spacing(1, 1.5, 1, 1.5)
   },
   input: {
     width: theme.spacing(20),
@@ -96,27 +119,71 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
     borderRadius: '10px',
     border: 'solid 1px var(--gray - 2)',
-    marginRight: theme.spacing(5),
+    marginRight: theme.spacing(3),
     fontSize: '16px'
   },
   selectDropdown: {
     width: theme.spacing(20),
   },
   formControl: {
-    marginRight: theme.spacing(8),
+    marginRight: '24px',
     fontSize: '12px'
   },
   keyDetailsLabel: {
-    marginRight: theme.spacing(0.8),
+    marginRight: theme.spacing(2)
   },
   companyText: {
     fontWeight: '500',
   },
   jobTitle: {
-    fontWeight: '700'
+    fontWeight: '900',
+    fontSize: '1.4rem'
   },
   deleteButton: {
-    backgroundColor: 'red'
+    backgroundColor: 'red',
+    textTransform: 'none',
+    color: 'white',
+    borderRadius: '40px',
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(2)
+  },
+  cancelButton : {
+    textTransform: 'none',
+    borderRadius: '40px',
+    backgroundColor: theme.palette.text.grayOne,
+    marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(2)
+  },
+  cardContent: {
+    paddingTop: theme.spacing(2.5),
+    paddingBottom: theme.spacing(1.5)
+  },
+  notes: {
+    borderRadius: '10px',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3)
+  },
+  closeIcon : {
+    padding: '4px'
+  },
+  dialogTitle: {
+    padding: theme.spacing(2),
+    paddingRight: '0px'
+  },
+  dialogContent: {
+    padding: theme.spacing(2,6,4,6)
+  },
+  saveButton: {
+    borderRadius: '30px',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white,
+    padding: theme.spacing(1,3,1,3),
+    '&:hover': {
+      backgroundColor: theme.palette.primary.first,
+    },
+    textTransform: 'none',
   }
 }));
 
@@ -354,11 +421,11 @@ const JobCard = ({
       className={clsx(classes.root, className)}
       {...props}
     >
-      <CardContent >
+      <CardContent className={classes.cardContent}>
         <Box
           display="flex">
 
-          <Box m={5}>
+          <Box m={5} mr={4} ml={4}>
             <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary" />
           </Box>
           <Box
@@ -371,7 +438,8 @@ const JobCard = ({
               <Box
                 display="flex"
                 justifyContent="flex-start"
-                mb={3}
+                mb={4}
+                mt={3}
               >
                 <Box
                   display="flex"
@@ -380,7 +448,7 @@ const JobCard = ({
                   <Typography
                     color="textPrimary"
                     gutterBottom
-                    variant="h4"
+                    variant="h5"
                   >
                     Job Title
                   </Typography>
@@ -401,7 +469,7 @@ const JobCard = ({
                   <Typography
                     color="textPrimary"
                     gutterBottom
-                    variant="h4"
+                    variant="h5"
                   >
                     Company
                   </Typography>
@@ -422,7 +490,7 @@ const JobCard = ({
                   <Typography
                     color="textPrimary"
                     gutterBottom
-                    variant="h4"
+                    variant="h5"
                   >
                     Location
                   </Typography>
@@ -462,9 +530,9 @@ const JobCard = ({
                   >
                     {values.company ? values.company : defaultValues.company}
                   </Typography>
-                  <LocationOnIcon style={{ color: '#ABB2BD', marginBottom: '-5px' }} />
+                  <LocationOnIcon style={{ color: '#ABB2BD', marginBottom: '-5px' ,marginRight: '6px'}} />
                   <Typography
-                    color="textSecondary"
+                    color="textPrimary"
                     display="inline"
                     variant="body1"
                     className={classes.keyDetailsLabel}
@@ -476,7 +544,7 @@ const JobCard = ({
 
               </Box>}
 
-            <Box paddingBottom={1}>
+            <Box paddingBottom={1} mb={0.8}>
               <Grid
                 container
                 justify="space-between"
@@ -491,7 +559,7 @@ const JobCard = ({
                     <DatePicker
                       disableToolbar
                       variant="inline"
-                      label="Deadline"
+                      label="Due"
                       value={values.deadline}
                       onChange={(newValue) => handleDeadlineChange(newValue)}
                       className={classes.datePicker}
@@ -524,7 +592,7 @@ const JobCard = ({
                     </FormControl>
 
                     <Chip
-                      label="Job Posting URL"
+                      label="Job Post URL"
                       component="a"
                       href={values.url}
                       clickable
@@ -532,6 +600,7 @@ const JobCard = ({
                       deleteIcon={<NavigateNextIcon />}
                       onDelete={handleChipDelete}
                       variant="outlined"
+                      className={classes.jobUrlButton}
                     />
 
                   </Grid>
@@ -542,22 +611,22 @@ const JobCard = ({
                     item
                   >
                     <Chip
-                      label={values.deadline && values.deadline !== '' ? 'Deadline: ' + values.deadline.toLocaleString('default', { month: 'long' }) + ' '
-                        + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Deadline: N/A'}
+                      label={values.deadline && values.deadline !== '' ? 'Due: ' + values.deadline.toLocaleString('default', { month: 'short' }) + ' '
+                        + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Due: N/A'}
                       className={calculateTimeDiff(values.deadline) < 5 ? classes.deadlineButtonClose : classes.deadlineButtonNormal}
                     />
                     <Chip
-                      label={values.postedDate && values.postedDate !== '' ? 'Posted: ' + calculateTimeDiff(values.postedDate) + ' days ago'
+                      label={values.postedDate && values.postedDate !== '' ? 'Posted ' + calculateTimeDiff(values.postedDate) + ' days ago'
                         : 'Posted: N/A'}
                       className={classes.dataButton}
                     />
                     <Chip
-                      label={values.progress ? 'Application Status: ' + values.progress : 'Application Status: ' + defaultValues.progress}
+                      label={values.progress ? values.progress : defaultValues.progress}
                       className={classes.dataButton}
                     />
 
                     <Chip
-                      label="Job Posting URL"
+                      label="Job Post URL"
                       component="a"
                       href={values.url}
                       clickable
@@ -573,20 +642,19 @@ const JobCard = ({
 
             </Box>
           </Box>
-          <Box m={5} onClick={() => handleEditingClick()}>
+          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleEditingClick()}>
             {editing ? null : <CreateIcon />}
 
           </Box>
-          <Box m={5} onClick={() => handleExpandClick()}>
-            {open ? <ExpandMore /> : <ExpandLess />}
-
+          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleExpandClick()}>
+            {open && editing ? null : (open ? <ExpandLess /> : <ExpandMore />)}
           </Box>
 
-          <Box m={5} >
-            <DeleteIcon onClick={() => handleDeleteModalShow()} />
+          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" >
+            <DeleteIcon onClick={() => handleDeleteModalShow()}/>
             {deleteModalShow ? <Dialog open={deleteModalShow} onClose={handleClose} className={classes.dialog}>
               {/* <form onSubmit={handleDeleteCard}> */}
-              <DialogTitle className={classes.title}>
+              <DialogTitle className={classes.dialogTitle}>
                 <Grid container spacing={20}>
                   <Grid item md={10} xs={12}>
                     <Typography align="left" gutterBottom variant="h5">
@@ -604,10 +672,11 @@ const JobCard = ({
                   </Grid>
                 </Grid>
               </DialogTitle>
-              <DialogContent>
-                <Typography>Are you sure you want to delete this card? </Typography>
+              <DialogContent className={classes.dialogContent}>
+                <Typography
+                >Are you sure you want to delete this card? </Typography>
               </DialogContent>
-              <Divider />
+              <Divider/>
               <DialogActions>
                 <Button
                   className={classes.cancelButton}
@@ -639,14 +708,15 @@ const JobCard = ({
         <Box
           display="flex"
           justifyContent="flex-start"
-          ml={15}
+          ml={12.5}
         >
           <Box
             display="flex"
             justifyContent="flex-start"
             flexDirection="column"
             flexGrow={1}
-            m={3}
+            mt={3}
+            mb={6}
           >
 
             <Typography
@@ -659,10 +729,12 @@ const JobCard = ({
             <Box
               display="flex"
               justifyContent="flex-start"
+              alignItems="center"
               mb={3}
+              mt={1}
             >
               {values.appMaterial && values.appMaterial.map((item) => {
-                return (<Chip label={item}></Chip>)
+                return (<Chip label={item} className={classes.customTag}></Chip>)
               })}
 
               {showAddMaterialSelect ?
@@ -690,16 +762,19 @@ const JobCard = ({
               color="textPrimary"
               gutterBottom
               variant="h5"
+              mb={1}
             >
               Category Tags
           </Typography>
             <Box
               display="flex"
               justifyContent="flex-start"
+              alignItems="center"
               mb={3}
+              mt={1}
             >
               {values.tags && values.tags.map((item) => {
-                return (<Chip label={item}></Chip>)
+                return (<Chip label={item} className={classes.customTag}></Chip>)
               })}
 
               {showAddTagSelect ?
@@ -733,21 +808,53 @@ const JobCard = ({
             >
               Notes
           </Typography>
+          {editing ?
+            <FormControl>
+              <TextField
+                className={classes.notes}
+                placeholder="Your Notes Here"
+                multiline
+                value={values.notes}
+                onChange={handleInputChange('notes')}
+                labelWidth={0}
+                variant="outlined"
+              />
+            </FormControl>
+              :
+              <TextField
+                inputProps={
+                { 
+                  readOnly: true, 
+                }
+                }
+                placeHolder={defaultValues.notes}
+                defaultValue={values.notes}
+                multiline
+                variant="outlined"
+                className={classes.notes}
+              />
 
-            {editing ?
+            }
+            {/* {editing ?
               <TextField
                 defaultValue={values.notes}
-                variant="filled"
+                multiline
+                variant="outlined"
+                InputProps={{
+                  className: classes.notes,
+              }}
               />
               :
               <TextField
                 disabled
                 placeHolder={defaultValues.notes}
                 defaultValue={values.notes}
-                variant="filled"
+                multiline
+                variant="outlined"
+                className={classes.notes}
               />
 
-            }
+            } */}
 
           </Box>
 
@@ -771,7 +878,7 @@ const JobCard = ({
               <Typography
                 color="white"
                 display="inline"
-                variant="h3"
+                variant="h5"
               >
                 Save
           </Typography>
