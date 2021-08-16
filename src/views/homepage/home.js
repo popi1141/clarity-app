@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft: '20px',
         paddingRight: '20px',
         textTransform: 'none',
-        maxWidth: '24%',
+        width: 'fit-content',
         '&:hover': {
           backgroundColor: theme.palette.primary.main
         }
