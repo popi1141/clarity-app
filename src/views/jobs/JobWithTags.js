@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import JobListView from "./JobListView";
 import {
     Switch,
     Route,
-    Link,
     useRouteMatch
 } from "react-router-dom";
 
@@ -22,7 +21,7 @@ const JobFilter = ({
     getUserData,
     handleSaveChanged
     }) => {
-    let {path, url} = useRouteMatch();
+    let {path} = useRouteMatch();
 
     return (
         <div>

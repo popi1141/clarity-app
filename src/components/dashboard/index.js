@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/core';
 import NavBar from './navBar';
 import TopBar from './topBar';
 import AccountView from '../../views/account/AccountView';
-import JobListView from '../../views/jobs/JobListView';
 import SettingsView from '../../views/settings/SettingsView';
 import NotFoundView from '../../views/errors/NotFoundView';
 import firebase from '@firebase/app';
@@ -290,8 +289,8 @@ const DashboardLayout = () => {
     console.log('highpriorityjobs: ', highPriorityJobs)
     console.log('reg jobs: ', regPriorityJobs)
     console.log("svaed: ", saved)
-    getUserData();
-  }, [saved])
+    getUserData();// eslint-disable-next-line
+  }, [saved]) 
   return (
     <div className={classes.root}>
       <NavBar

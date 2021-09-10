@@ -38,10 +38,6 @@ import PushPin from '../../../assets/PushPin.js'
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
-import MUIRichTextEditor from "mui-rte";
-import { convertToRaw } from "draft-js";
-import { TheatersOutlined } from '@material-ui/icons';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -271,7 +267,7 @@ const JobCard = ({
   }
 
   // job desc
-  const [desc, setDesc] = useState(null);
+  // const [desc, setDesc] = useState(null);
 
 
   // expand/contract card 
@@ -345,14 +341,14 @@ const JobCard = ({
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  const handleEditorChange = (value) => {
-    // value => {
-    //   const jobDesc = JSON.stringify(
-    //     convertToRaw(value.getCurrentContent())
-    //   );
-    // }
-    setValues({ ...values, jobDesc: value})
-  }
+  // const handleEditorChange = (value) => {
+  //   // value => {
+  //   //   const jobDesc = JSON.stringify(
+  //   //     convertToRaw(value.getCurrentContent())
+  //   //   );
+  //   // }
+  //   setValues({ ...values, jobDesc: value})
+  // }
 
   const handleDeadlineChange = (value) => {
     // console.log("handleDeadline called");
