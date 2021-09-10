@@ -28,6 +28,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { DatePicker } from "@material-ui/pickers";
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -37,6 +38,9 @@ import PushPin from '../../../assets/PushPin.js'
 import firebase from '@firebase/app';
 import '@firebase/firestore'
 import '@firebase/auth';
+import MUIRichTextEditor from "mui-rte";
+import { convertToRaw } from "draft-js";
+import { TheatersOutlined } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -162,8 +166,9 @@ const useStyles = makeStyles((theme) => ({
   },
   notes: {
     borderRadius: '10px',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(3),
+    marginRight: theme.spacing(4)
   },
   closeIcon : {
     padding: '4px'
@@ -174,6 +179,15 @@ const useStyles = makeStyles((theme) => ({
   },
   dialogContent: {
     padding: theme.spacing(2,6,4,6)
+  },
+  editFields: {
+    borderColor: theme.palette.text.grayTwo,
+    borderRadius: '10px',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+    marginRight: theme.spacing(4),
+    padding: theme.spacing(1,3,1,3),
+    minHeight: '100px'
   },
   saveButton: {
     borderRadius: '30px',
@@ -194,13 +208,18 @@ const JobCard = ({
   handlePriorityChangeToReg,
   handlePriorityChangeToHigh,
   updatePriorityLists,
+  getUserData,
+  handleSaveChanged,
   ...props
 }) => {
   const classes = useStyles();
+  // console.log("updatePriorityList: ", updatePriorityLists);
+  // console.log("getUserData: ", getUserData);
   const [values, setValues] = useState({})
   const defaultValues = {
     title: 'Untitled',
     location: 'Unspecified Location',
+    salary: 'Unspecified Salary',
     company: 'Unspecified Company',
     deadline: 'N/A',
     postedDate: 'N/A',
@@ -211,6 +230,7 @@ const JobCard = ({
     priority: true,
     url: '',
     tags: '',
+    jobDesc: 'No job description added',
     notes: 'No notes added',
     initialEditability: false
   }
@@ -225,6 +245,7 @@ const JobCard = ({
       ...values,
       title: job.title,
       location: job.location,
+      salary: job.salary,
       company: job.company,
       deadline: job.deadline ? job.deadline.toDate() : new Date(),
       postedDate: job.postedDate ? job.postedDate.toDate() : new Date(),
@@ -235,6 +256,7 @@ const JobCard = ({
       priority: job.priority,
       url: job.url,
       tags: job.tags,
+      jobDesc: job.jobDesc,
       notes: job.notes,
       initialEditability: job.initialEditability
     });
@@ -247,6 +269,10 @@ const JobCard = ({
     const diffDays = Math.round(Math.abs((currDate - date) / oneDay));
     return diffDays
   }
+
+  // job desc
+  const [desc, setDesc] = useState(null);
+
 
   // expand/contract card 
   const [open, setOpen] = useState(false)
@@ -264,6 +290,7 @@ const JobCard = ({
   const handleEditingClick = () => {
     toggleEditing(!editing)
     setOpen(true);
+
   }
 
   // change priority
@@ -318,11 +345,23 @@ const JobCard = ({
     setValues({ ...values, [prop]: event.target.value });
   };
 
+  const handleEditorChange = (value) => {
+    // value => {
+    //   const jobDesc = JSON.stringify(
+    //     convertToRaw(value.getCurrentContent())
+    //   );
+    // }
+    setValues({ ...values, jobDesc: value})
+  }
+
   const handleDeadlineChange = (value) => {
+    // console.log("handleDeadline called");
     setValues({ ...values, deadline: value.toDate() })
   }
 
   const handlePostedDateChange = (value) => {
+    // console.log("handlePostDate called");
+
     setValues({ ...values, postedDate: value.toDate() })
   }
 
@@ -379,16 +418,19 @@ const JobCard = ({
       .doc(job.id)
       .set(values)
       .then(function () {
+        handleSaveChanged();
+        // getUserData();
       });
 
     toggleEditing(false)
     setOpen(false);
+
     //setInitialEditability(!initialEditability)
   }
 
   const handleDeleteCard = () => {
     const uid = localStorage.getItem("uid")
-    console.log(job.id)
+    // console.log(job.id)
 
 
     firebase.firestore()
@@ -415,6 +457,8 @@ const JobCard = ({
   const handleChipDelete = () => {
     setChipValue(!chipVal)
   }
+
+
 
   return (
     <Card
@@ -458,7 +502,6 @@ const JobCard = ({
                       placeholder="Position Title"
                       value={values.title}
                       onChange={handleInputChange('title')}
-                      labelWidth={0}
                     />
                   </FormControl>
                 </Box>
@@ -479,7 +522,6 @@ const JobCard = ({
                       placeholder="Company Name"
                       value={values.company}
                       onChange={handleInputChange('company')}
-                      labelWidth={0}
                     />
                   </FormControl>
                 </Box>
@@ -500,7 +542,26 @@ const JobCard = ({
                       placeholder="City, State"
                       value={values.location}
                       onChange={handleInputChange('location')}
-                      labelWidth={0}
+                    />
+                  </FormControl>
+                </Box>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    color="textPrimary"
+                    gutterBottom
+                    variant="h5"
+                  >
+                    Salary
+                  </Typography>
+                  <FormControl>
+                    <OutlinedInput
+                      className={classes.input}
+                      placeholder="Est. Salary"
+                      value={values.salary}
+                      onChange={handleInputChange('salary')}
                     />
                   </FormControl>
                 </Box>
@@ -539,6 +600,16 @@ const JobCard = ({
                   >
 
                     {values.location ? values.location : defaultValues.location}
+                  </Typography>
+                  <AttachMoneyIcon style={{ color: '#ABB2BD', marginBottom: '-5px' ,marginRight: '6px'}} />
+                  <Typography
+                    color="textPrimary"
+                    display="inline"
+                    variant="body1"
+                    className={classes.keyDetailsLabel}
+                  >
+
+                    {values.salary ? values.salary : defaultValues.salary}
                   </Typography>
                 </Box>
 
@@ -590,8 +661,21 @@ const JobCard = ({
 
                       </Select>
                     </FormControl>
-
-                    <Chip
+                      <FormControl>
+                        {/* <OutlinedInput
+                          className={classes.input}
+                          value={values.url}
+                          onChange={handleInputChange('url')}
+                        /> */}
+                        <TextField 
+                          id="standard-basic" 
+                          label="Job Post URL"
+                          className={classes.input}
+                          value={values.url}
+                          onChange={handleInputChange('url')}
+                        />
+                      </FormControl>
+                    {/* <Chip
                       label="Job Post URL"
                       component="a"
                       href={values.url}
@@ -601,7 +685,7 @@ const JobCard = ({
                       onDelete={handleChipDelete}
                       variant="outlined"
                       className={classes.jobUrlButton}
-                    />
+                    /> */}
 
                   </Grid>
 
@@ -789,7 +873,6 @@ const JobCard = ({
                       }
                     }}
                     onChange={handleTagChange}
-                    labelWidth={0}
                   />
                 </FormControl>
                 :
@@ -800,62 +883,138 @@ const JobCard = ({
                 : null
               }
             </Box>
-
-            <Typography
-              color="textPrimary"
-              gutterBottom
-              variant="h5"
-            >
-              Notes
-          </Typography>
-          {editing ?
-            <FormControl>
-              <TextField
-                className={classes.notes}
-                placeholder="Your Notes Here"
-                multiline
-                value={values.notes}
-                onChange={handleInputChange('notes')}
-                labelWidth={0}
-                variant="outlined"
-              />
-            </FormControl>
-              :
-              <TextField
-                inputProps={
-                { 
-                  readOnly: true, 
+              <Box
+                display="flex"
+                justifyContent="flex-start"
+                flexDirection="column"
+              >
+              <Typography
+                color="textPrimary"
+                gutterBottom
+                variant="h5"
+              >
+                Job Description
+              </Typography>
+              {editing ?
+                <FormControl>
+                  <TextField
+                    className={classes.notes}
+                    placeholder="Add Job Descriptions Here"
+                    multiline
+                    value={values.jobDesc}
+                    onChange={handleInputChange('jobDesc')}
+                    variant="outlined"
+                  />
+                </FormControl>
+                  :
+                  <TextField
+                    inputProps={
+                    { 
+                      readOnly: true, 
+                    }
+                    }
+                    placeHolder={defaultValues.jobDesc}
+                    defaultValue={values.jobDesc}
+                    multiline
+                    variant="outlined"
+                    className={classes.jobDesc}
+                  />
                 }
+                {/* <Box
+                  border={1}
+                  className={classes.editFields}
+                >
+                  {editing ?
+                    <MUIRichTextEditor
+                      label="Add Job Descriptions here..."
+                      defaultValue={values.jobDesc}
+                      controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo", "redo", "link", "media", "numberList", "bulletList"]}
+                      onChange={
+                            (value) => {
+                              let result = JSON.stringify(
+                                    convertToRaw(value.getCurrentContent())
+                                  );
+                              console.log("value: ", result);
+                              console.log("changed");
+                              handleEditorChange(result);
+
+                            }
+                      }
+                    />
+                      :
+                      <MUIRichTextEditor
+                      label="No Job Descriptions Added"
+                      defaultValue={values.jobDesc}
+                      readOnly={true}
+                      toolbar={false}
+                    />
+                  }
+                </Box> */}
+              </Box>
+              <Box
+                display="flex"
+                justifyContent="flex-start"
+                flexDirection="column"
+                marginTop="24px"
+              >
+              <Typography
+                color="textPrimary"
+                gutterBottom
+                variant="h5"
+              >
+                Notes
+              </Typography>
+              {/* <Box
+                border={1}
+                className={classes.editFields}
+              >
+                {editing ?
+                  <MUIRichTextEditor
+                    label="Add your notes here..."
+                    defaultValue={values.notes}
+                    controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo", "redo", "link", "media", "numberList", "bulletList"]}
+                    onChange={value => {
+                      const notes = JSON.stringify(
+                        convertToRaw(value.getCurrentContent())
+                      );
+                      handleEditorChange(notes);
+                    }}
+                  />
+                    :
+                    <MUIRichTextEditor
+                    label="No Notes Added"
+                    defaultValue={values.notes}
+                    readOnly={true}
+                    toolbar={false}
+                  />
                 }
-                placeHolder={defaultValues.notes}
-                defaultValue={values.notes}
-                multiline
-                variant="outlined"
-                className={classes.notes}
-              />
-
-            }
-            {/* {editing ?
-              <TextField
-                defaultValue={values.notes}
-                multiline
-                variant="outlined"
-                InputProps={{
-                  className: classes.notes,
-              }}
-              />
-              :
-              <TextField
-                disabled
-                placeHolder={defaultValues.notes}
-                defaultValue={values.notes}
-                multiline
-                variant="outlined"
-                className={classes.notes}
-              />
-
-            } */}
-
+              </Box> */}
+              {editing ?
+                <FormControl>
+                  <TextField
+                    className={classes.notes}
+                    placeholder="Add Notes Here"
+                    multiline
+                    value={values.notes}
+                    onChange={handleInputChange('notes')}
+                    variant="outlined"
+                  />
+                </FormControl>
+                  :
+                  <TextField
+                    inputProps={
+                    { 
+                      readOnly: true, 
+                    }
+                    }
+                    placeholder={defaultValues.notes}
+                    defaultValue={values.notes}
+                    multiline
+                    variant="outlined"
+                    className={classes.notes}
+                  />
+                }
+              </Box>
           </Box>
 
           <Box

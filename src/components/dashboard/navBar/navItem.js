@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
+import {usePath} from 'hookrouter';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -29,23 +30,19 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2)
   },
   active: {
-    color: theme.palette.primary.main,
-    '& $title': {
-      fontWeight: theme.typography.fontWeight
+    borderRadius: '30px',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.white,
+    fontSize: '1rem',
+    margin: '12px 0px 12px 0px',
+    padding: '8px 24px 8px 24px',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.first,
+
     },
-    '& $icon': {
-      color: theme.palette.primary.main
-    }
+    textTransform: 'none',
+    
   }
-  // active: {
-  //   color: theme.palette.primary.main,
-  //   '& $title': {
-  //     fontWeight: theme.typography.fontWeightMedium
-  //   },
-  //   '& $icon': {
-  //     color: theme.palette.primary.main
-  //   }
-  // }
 }));
 
 const NavItem = ({
@@ -56,6 +53,9 @@ const NavItem = ({
   ...rest
 }) => {
   const classes = useStyles();
+  const path = usePath();
+  console.log("nav item path: ", path)
+  console.log("/app/dashboard/" + title)
 
   return (
     <ListItem
@@ -63,22 +63,41 @@ const NavItem = ({
       disableGutters
       {...rest}
     >
-      <Button
-        activeClassName={classes.active}
-        className={classes.button}
-        component={RouterLink}
-        to={href}
-      >
-        {/* {Icon && (
-          <Icon
-            className={classes.icon}
-            size="20"
-          />
-        )} */}
-        <span className={classes.title}>
-          {title}
-        </span>
-      </Button>
+      {"/app/dashboard/" + title === window.location.pathname.replace("%20", " ") ? 
+        <Button
+          // activeclassname={classes.active}
+          className={classes.active}
+          component={RouterLink}
+          to={href}
+        >
+          {/* {Icon && (
+            <Icon
+              className={classes.icon}
+              size="20"
+            />
+          )} */}
+          <span className={classes.title}>
+            {title}
+          </span>
+        </Button> : 
+        <Button
+          // activeclassname={classes.active}
+          className={classes.button}
+          component={RouterLink}
+          to={href}
+        >
+          {/* {Icon && (
+              <Icon
+                className={classes.icon}
+                size="20"
+              />
+          )} */}
+          <span className={classes.title}>
+            {title}
+          </span>
+        </Button>
+        }
+      
     </ListItem>
   );
 };

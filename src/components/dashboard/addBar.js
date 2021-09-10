@@ -59,13 +59,13 @@ const AddBar = ({createNewCard},) => {
     <form className={classes.form}>
       <View style={styles.view} >
         <TextInput type="text" style={styles.input}
-          placeholder="Save a Job Posting URL...."
+          placeholder="Input a Job Posting URL to Save...."
           value={url}
           onChange={handleURLChange}
         />
         <Button type="button" className={classes.addButton} onClick={() => createNewCard(url)}>
           <AddIcon className={classes.addIcon}></AddIcon>
-          <Typography>Add</Typography>
+          <Typography>Save</Typography>
         </Button>
       </View>
     </form>

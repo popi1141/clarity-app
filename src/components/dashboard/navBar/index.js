@@ -87,12 +87,28 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
         to={'/app/dashboard'}>
       <Logo />
       </Box>
-      <Box p={2}
+      {window.location.pathname === '/app/dashboard' ?
+        <Box p={2}
+          mb={5}
+          ml={2}>
+          <Button
+            // activeclassname={classes.active}
+            className={classes.allPostingsButton}
+            component={RouterLink}
+            to={'/app/dashboard'}
+          >
+            <Typography variant="h5" className={classes.title}>
+              All Postings
+          </Typography>
+          </Button>
+
+        </Box> :
+        <Box p={2}
         mb={5}
         ml={2}>
         <Button
-          activeClassName={classes.active}
-          className={classes.allPostingsButton}
+          // activeclassname={classes.active}
+          className={classes.navItem}
           component={RouterLink}
           to={'/app/dashboard'}
         >
@@ -102,6 +118,7 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
         </Button>
 
       </Box>
+      }
       <Box
         ml={5}
       >

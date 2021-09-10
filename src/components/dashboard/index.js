@@ -11,8 +11,10 @@ import JobListView from '../../views/jobs/JobListView';
 import SettingsView from '../../views/settings/SettingsView';
 import NotFoundView from '../../views/errors/NotFoundView';
 import firebase from '@firebase/app';
+import JobFilter from '../../views/jobs/JobWithTags';
 import '@firebase/firestore'
 import '@firebase/auth';
+// import NavItem from './navBar/navItem';
 //import rp from "request-promise";
 //import { parse } from 'node-html-parser';
 
@@ -51,11 +53,20 @@ const DashboardLayout = () => {
 
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const [initialEditability, setInitialEditability] = useState(true)
+  const [initialEditability, setInitialEditability] = useState(true);
   const [highPriorityJobs, sethighPriorityJobs] = useState([]);
   const [regPriorityJobs, setregPriorityJobs] = useState([]);
 
-  const uid = localStorage.getItem("uid")
+
+  let totalTags = [];
+  const [saved, setSaved] = useState(false);
+
+  const handleSaveChanged = () => {
+    setSaved(!saved);
+  }
+  // const [totalTags, setTotalTags] = useState({});
+
+  const uid = localStorage.getItem("uid");
 
   const handlePriorityChangeToHigh = (id) => {
     const toChange = regPriorityJobs.find(job => job.id === id)
@@ -114,6 +125,7 @@ const DashboardLayout = () => {
     const newCard = {
       title: null,
       location: null,
+      salary: null,
       company: null,
       deadline: null,
       postedDate: null,
@@ -124,6 +136,7 @@ const DashboardLayout = () => {
       priority: true,
       url: url,
       tags: [],
+      jobDesc: null,
       notes: null,
       initialEditability: true
     }
@@ -161,7 +174,8 @@ const DashboardLayout = () => {
 
   }
 
-  const [boards, setBoards] = useState([])
+  const [boards, setBoards] = useState([]);
+
 
   //const [apiData, setAPIData] = useState({})
 
@@ -202,6 +216,7 @@ const DashboardLayout = () => {
     return url.protocol === "http:" || url.protocol === "https:";
   }
 
+
   const getUserData = async () => {
     try {
       await firebase.firestore()
@@ -215,19 +230,40 @@ const DashboardLayout = () => {
 
           cards.forEach((card) => {
             card.tags.forEach((tag) => {
+              // console.log("boards: ", boards)
+              // console.log("tag: ", tag)
+              // console.log("tags: ", totalTags)
               const newBoard = {
                 href: '/app/dashboard/' + tag,
                 title: tag
               }
-              if (!Object.values(boards).includes(tag)) {
-                setBoards(boards => [...boards, newBoard])
+              // if (!Object.values(boards).includes(tag)) {
+              //   setBoards(boards => [...boards, newBoard])
+              // }
+
+              if (!totalTags.includes(tag)) {
+                console.log("new tags");
+                console.log("Tag: ", tag)
+                totalTags.push(tag)
+                // setTotalTags(totalTags => {...totalTags, {tag: true}});
+                const k = boards.filter(board => board.title !== tag)
+                let appendBoard = [...k, newBoard];
+                console.log("filtered boards: ", k)
+                console.log("changed boards", appendBoard)
+                console.log("original boards,", boards)
+                
+                setBoards(boards => [...boards.filter(board => board.title !== tag), newBoard]);
               }
 
+              
+
+
             })
+            console.log("card: ", card);
             if (card.priority) {
-              sethighPriorityJobs(highPriorityJobs => [...highPriorityJobs, card])
+              sethighPriorityJobs(highPriorityJobs => [...highPriorityJobs.filter(job => job.id !== card.id), card])
             } else {
-              setregPriorityJobs(regPriorityJobs => [...regPriorityJobs, card])
+              setregPriorityJobs(regPriorityJobs => [...regPriorityJobs.filter(job => job.id !== card.id), card])
             }
 
           })
@@ -244,10 +280,18 @@ const DashboardLayout = () => {
   };
 
   // Get user on mount
-  useEffect(() => {
-    getUserData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   getUserData();
+  // }, [totalTags]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    console.log("every render: ")
+    console.log('Tags: ', totalTags)
+    console.log('highpriorityjobs: ', highPriorityJobs)
+    console.log('reg jobs: ', regPriorityJobs)
+    console.log("svaed: ", saved)
+    getUserData();
+  }, [saved])
   return (
     <div className={classes.root}>
       <NavBar
@@ -268,7 +312,7 @@ const DashboardLayout = () => {
                   user={user} />
               </Route>
               <Route path="/app/dashboard"  >
-                <JobListView
+                {/* <JobListView
                   handlePriorityChangeToHigh={handlePriorityChangeToHigh}
                   handlePriorityChangeToReg={handlePriorityChangeToReg}
                   regPriorityJobs={regPriorityJobs}
@@ -279,6 +323,21 @@ const DashboardLayout = () => {
                   sethighPriorityJobs={sethighPriorityJobs}
                   setregPriorityJobs={setregPriorityJobs}
                   ref={jobsEndRef}
+                /> */}
+                <JobFilter
+                  Jobs={null}
+                  handlePriorityChangeToHigh={handlePriorityChangeToHigh}
+                  handlePriorityChangeToReg={handlePriorityChangeToReg}
+                  regPriorityJobs={regPriorityJobs}
+                  highPriorityJobs={highPriorityJobs}
+                  initialEditability={initialEditability}
+                  setInitialEditability={setInitialEditability}
+                  updatePriorityLists={updatePriorityLists}
+                  sethighPriorityJobs={sethighPriorityJobs}
+                  setregPriorityJobs={setregPriorityJobs}
+                  ref={jobsEndRef}
+                  getUserData={getUserData}
+                  handleSaveChanged={handleSaveChanged}
                 />
               </Route>
               <Route path="/app/settings"  >

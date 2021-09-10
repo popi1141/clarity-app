@@ -13,6 +13,7 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 // import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
 import JobCard from './JobCard';
+import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +97,8 @@ const JobListView = forwardRef((
   ref
 ) => {
   const classes = useStyles();
+  let {tag} = useParams();
+  // console.log("Tag = ", tag);
   const {
     handlePriorityChangeToHigh,
     handlePriorityChangeToReg,
@@ -105,33 +108,57 @@ const JobListView = forwardRef((
     setInitialEditability,
     updatePriorityLists,
     setregPriorityJobs,
-    sethighPriorityJobs
+    sethighPriorityJobs,
+    getUserData,
+    handleSaveChanged
   } = props;
 
+  
+  // console.log("updatePriorityList: ", updatePriorityLists);
+  // console.log("getUserData: ", getUserData);
+  // console.log("high priority jobs: ", highPriorityJobs);
+  // console.log("reg jobs: ", regPriorityJobs);
   const [sortByValue, setSortByValue] = useState(null);
 
   const sortByOptions = [
-    { value: 'Location' },
     { value: 'Posted Date' },
-    { value: 'Application Status' },
     { value: 'Deadline' },
   ]
 
   const handleSort = (prop) => (event) => {
     setSortByValue(event.target.value)
     if (event.target.value === "Deadline") {
+      // console.log("reg Jobs: ", regPriorityJobs);
+      // console.log("high Jobs: ", highPriorityJobs);
       regPriorityJobs.sort(function (a, b) {
-        return a.deadline.toDate() - b.deadline.toDate();
+        if (!a.deadline || !b.deadline) {
+          return true;
+        } else {
+          return a.deadline.toDate() - b.deadline.toDate();
+        }
       });
+      
       highPriorityJobs.sort(function (a, b) {
-        return a.deadline.toDate() - b.deadline.toDate();
+        if (!a.deadline || !b.deadline) {
+          return true;
+        } else {
+          return a.deadline.toDate() - b.deadline.toDate();
+        }
       });
     } else if (event.target.value === "Posted Date") {
       regPriorityJobs.sort(function (a, b) {
-        return b.postedDate.toDate() - a.postedDate.toDate();
+        if (!a.postedDate || !b.postedDate) {
+          return false;
+        } else {
+          return b.postedDate.toDate() - a.postedDate.toDate();
+        }
       });
       highPriorityJobs.sort(function (a, b) {
-        return b.postedDate.toDate() - a.postedDate.toDate();
+        if (!a.postedDate || !b.postedDate) {
+          return false;
+        } else {
+          return b.postedDate.toDate() - a.postedDate.toDate();
+        }
       });
     }
     sethighPriorityJobs(highPriorityJobs)
@@ -164,12 +191,8 @@ const JobListView = forwardRef((
                   {sortByOptions.map((item) => {
                     return (<MenuItem value={item.value}>{item.value}</MenuItem>)
                   })}
-
-
                 </Select>
               </MuiThemeProvider>
-
-
             </FormControl>
           </Box>
         </Box>
@@ -183,7 +206,7 @@ const JobListView = forwardRef((
           High Priority
         </Typography>
 
-        <Box mt={3} mb={6}>
+        {/* <Box mt={3} mb={6}>
           {highPriorityJobs.map((job, i) => {
             return (<JobCard
               className={classes.highJobCard}
@@ -192,6 +215,31 @@ const JobListView = forwardRef((
               handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
               handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
               updatePriorityLists={updatePriorityLists}
+            />)
+          })}
+        </Box> */}
+        <Box mt={3} mb={6}>
+          {!tag ? highPriorityJobs.map((job, i) => {
+            return (<JobCard
+              className={classes.highJobCard}
+              key={job.id}
+              job={job}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
+              updatePriorityLists={updatePriorityLists}
+              getUserData={getUserData}
+              handleSaveChanged={handleSaveChanged}
+            />)
+          }) : highPriorityJobs.filter(highPriorityJobs => highPriorityJobs.tags.includes(tag)).map((job, i) => {
+            return (<JobCard
+              className={classes.highJobCard}
+              key={job.id}
+              job={job}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
+              updatePriorityLists={updatePriorityLists}
+              getUserData={getUserData}
+              handleSaveChanged={handleSaveChanged}
             />)
           })}
         </Box>
@@ -206,7 +254,7 @@ const JobListView = forwardRef((
         </Typography>
 
         <Box mt={3} mb={6} >
-          {regPriorityJobs.map((job, i) => (
+          {!tag ? regPriorityJobs.map((job, i) => (
             <JobCard
               className={classes.regJobCard}
               key={job.id}
@@ -216,8 +264,25 @@ const JobListView = forwardRef((
               initialEditability={initialEditability}
               setInitialEditability={setInitialEditability}
               updatePriorityLists={updatePriorityLists}
+              getUserData={getUserData}
+              handleSaveChanged={handleSaveChanged}
             />
-          ))}
+          )) : 
+          regPriorityJobs.filter(regPriorityJobs => regPriorityJobs.tags.includes(tag)).map((job, i) => (
+            <JobCard
+              className={classes.regJobCard}
+              key={job.id}
+              job={job}
+              handlePriorityChangeToReg={() => handlePriorityChangeToReg(job.id)}
+              handlePriorityChangeToHigh={() => handlePriorityChangeToHigh(job.id)}
+              initialEditability={initialEditability}
+              setInitialEditability={setInitialEditability}
+              updatePriorityLists={updatePriorityLists}
+              getUserData={getUserData}
+              handleSaveChanged={handleSaveChanged}
+            />
+          )) 
+          }
         </Box>
         <Box
           ref={ref}
