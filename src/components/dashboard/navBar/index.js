@@ -10,6 +10,7 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import ViewListIcon from '@material-ui/icons/ViewList';
 import NavItem from './navItem';
 import { ReactComponent as Logo } from '../../../assets/Logo.svg'
 
@@ -27,34 +28,31 @@ const useStyles = makeStyles((theme) => ({
     height: 64
   },
   allPostingsButton: {
-    borderRadius: '30px',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.white,
-    padding: '12px 24px 12px 24px',
+    color: theme.palette.primary.main,
     '&:hover': {
-      backgroundColor: theme.palette.primary.first,
-
+      backgroundColor: theme.palette.text.grayOne,
     },
     textTransform: 'none',
-    
+    width: '160px',
+    justifyContent: 'left',
+    fontWeight: '700'
   },
   title: {
     fontSize: '16px',
     fontWeight: 'medium',
-    letterSpacing: '0.1px',
+    letterSpacing: '0.1px'
   },
   navItem: {
     color: theme.palette.black,
-    fontWeight: theme.typography.fontWeightMedium,
-    justifyContent: 'flex-start',
-    letterSpacing: 0,
+    fontWeight: theme.typography.fontWeightRegular,
+    width: '160px',
     textTransform: 'none',
-    width: '100%',
+    justifyContent: 'left'
   },
   tags: {
     letterSpacing: '0.2px',
     color: theme.palette.text.grayThree,
-    fontSize: '0.8rem'
+    fontSize: '0.9rem'
   },
   navItems: {
     textAlign: 'left'
@@ -88,42 +86,44 @@ const NavBar = ({ onMobileClose, openMobile, boards }) => {
       <Logo />
       </Box>
       {window.location.pathname === '/app/dashboard' ?
-        <Box p={2}
+        <Box p={1}
           mb={5}
-          ml={2}>
+          ml={3.5}>
           <Button
-            // activeclassname={classes.active}
             className={classes.allPostingsButton}
             component={RouterLink}
             to={'/app/dashboard'}
           >
-            <Typography variant="h5" className={classes.title}>
-              All Postings
-          </Typography>
+            <ViewListIcon />
+            <Box ml={1}>
+              <Typography className={classes.title}>
+                All Postings
+              </Typography>
+            </Box>
           </Button>
-
         </Box> :
-        <Box p={2}
+        <Box p={1}
         mb={5}
-        ml={2}>
+        ml={3.5}>
         <Button
-          // activeclassname={classes.active}
           className={classes.navItem}
           component={RouterLink}
           to={'/app/dashboard'}
         >
-          <Typography variant="h5" className={classes.title}>
-            All Postings
-        </Typography>
+          <ViewListIcon />
+          <Box ml={1}>
+            <Typography className={classes.title}>
+              All Postings
+            </Typography>
+          </Box>
         </Button>
-
       </Box>
       }
       <Box
         ml={5}
       >
         <Box>
-          <Typography className={classes.tags}>MY TAGS</Typography>
+          <Typography className={classes.tags}>CATEGORY TAGS</Typography>
         </Box>
         <Box
           mb={2}

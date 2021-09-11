@@ -22,7 +22,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton
+  IconButton,
+  Tooltip
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -34,6 +35,7 @@ import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOut
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
+// import StarIcon from '@material-ui/icons/Star';
 import PushPin from '../../../assets/PushPin.js'
 import firebase from '@firebase/app';
 import '@firebase/firestore'
@@ -184,6 +186,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(4),
     padding: theme.spacing(1,3,1,3),
     minHeight: '100px'
+  },
+  tooltip: {
+    fontSize: '12px'
   },
   saveButton: {
     borderRadius: '30px',
@@ -464,7 +469,6 @@ const JobCard = ({
       <CardContent className={classes.cardContent}>
         <Box
           display="flex">
-
           <Box m={5} mr={4} ml={4}>
             <PushPin changePriority={changePriority} priorityStatus={values.priority} i={i} color="primary" />
           </Box>
@@ -473,6 +477,8 @@ const JobCard = ({
             justifyContent="flex-start"
             flexGrow={1}
             flexDirection="column"
+            onClick={open && editing ? () => handleSaveData() : () => handleExpandClick()}
+            style={{cursor: 'pointer'}}
           >
             {editing ?
               <Box
@@ -723,15 +729,15 @@ const JobCard = ({
             </Box>
           </Box>
           <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleEditingClick()}>
-            {editing ? null : <CreateIcon />}
+            {editing ? null : <CreateIcon style={{cursor: 'pointer'}} />}
 
           </Box>
           <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleExpandClick()}>
-            {open && editing ? null : (open ? <ExpandLess /> : <ExpandMore />)}
+            {open && editing ? null : (open ? <ExpandLess style={{cursor: 'pointer'}}/> : <ExpandMore style={{cursor: 'pointer'}}/>)}
           </Box>
 
           <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" >
-            <DeleteIcon onClick={() => handleDeleteModalShow()}/>
+            <DeleteIcon style={{cursor: 'pointer'}} onClick={() => handleDeleteModalShow()}/>
             {deleteModalShow ? <Dialog open={deleteModalShow} onClose={handleClose} className={classes.dialog}>
               {/* <form onSubmit={handleDeleteCard}> */}
               <DialogTitle className={classes.dialogTitle}>
@@ -858,19 +864,21 @@ const JobCard = ({
               })}
 
               {showAddTagSelect ?
-                <FormControl className={classes.formControl}>
-                  <OutlinedInput
-                    placeholder="Add Tag"
-                    value={currentAddTag}
-                    onKeyPress={(ev) => {
-                      if (ev.key === 'Enter') {
-                        handleTagAdd(ev)
-                        ev.preventDefault();
-                      }
-                    }}
-                    onChange={handleTagChange}
-                  />
-                </FormControl>
+                <Tooltip title="Press Enter to save." classes={{tooltip: classes.tooltip}}>
+                  <FormControl className={classes.formControl}>
+                    <OutlinedInput
+                      placeholder="Add a tag"
+                      value={currentAddTag}
+                      onKeyPress={(ev) => {
+                        if (ev.key === 'Enter') {
+                          handleTagAdd(ev)
+                          ev.preventDefault();
+                        }
+                      }}
+                      onChange={handleTagChange}
+                    />
+                  </FormControl>
+                </Tooltip>
                 :
                 null
               }

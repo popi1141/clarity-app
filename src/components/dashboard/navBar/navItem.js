@@ -4,10 +4,12 @@ import {usePath} from 'hookrouter';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
+  Box,
   Button,
   ListItem,
   makeStyles
 } from '@material-ui/core';
+import CheckIcon from '@material-ui/icons/Check';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -21,27 +23,29 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginRight: 'auto'
   },
-  button: {
-    paddingLeft: '0px',
-    fontSize: '1rem',
-    fontWeight: '400',
+  navItem: {
+    color: theme.palette.black,
+    fontWeight: theme.typography.fontWeightRegular,
+    width: '160px',
     textTransform: 'none',
-    lineHeight: '1',
-    marginLeft: theme.spacing(2)
+    fontSize: '1rem',
+    justifyContent: 'left',
+    lineHeight: '0.7'
+  },
+  check: {
+    opacity: '0'
   },
   active: {
-    borderRadius: '30px',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.white,
+    color: theme.palette.primary.main,
     fontSize: '1rem',
-    margin: '12px 0px 12px 0px',
-    padding: '8px 24px 8px 24px',
     '&:hover': {
-      backgroundColor: theme.palette.primary.first,
-
+      backgroundColor: theme.palette.text.grayOne,
     },
     textTransform: 'none',
-    
+    width: '160px',
+    fontWeight: '700',
+    lineHeight: '0.7',
+    justifyContent: 'left'
   }
 }));
 
@@ -65,36 +69,28 @@ const NavItem = ({
     >
       {"/app/dashboard/" + title === window.location.pathname.replace("%20", " ") ? 
         <Button
-          // activeclassname={classes.active}
           className={classes.active}
           component={RouterLink}
           to={href}
         >
-          {/* {Icon && (
-            <Icon
-              className={classes.icon}
-              size="20"
-            />
-          )} */}
-          <span className={classes.title}>
-            {title}
-          </span>
+          <CheckIcon />
+          <Box ml={1}>
+            <span className={classes.title}>
+              {title}
+            </span>
+          </Box>
         </Button> : 
         <Button
-          // activeclassname={classes.active}
-          className={classes.button}
           component={RouterLink}
           to={href}
+          className={classes.navItem}
         >
-          {/* {Icon && (
-              <Icon
-                className={classes.icon}
-                size="20"
-              />
-          )} */}
-          <span className={classes.title}>
-            {title}
-          </span>
+          <CheckIcon className={classes.check}/>
+          <Box ml={1}>
+            <span className={classes.title}>
+              {title}
+            </span>
+          </Box>
         </Button>
         }
       

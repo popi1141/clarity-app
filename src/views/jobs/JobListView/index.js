@@ -37,11 +37,11 @@ const useStyles = makeStyles((theme) => ({
   },
   regJobCard: {
     height: '100%',
-    animation: `$fadeIn 500ms`,
+    // animation: `$fadeIn 500ms`,
   },
   highJobCard: {
     height: '100%',
-    animation: `$fadeInFromBottom 500ms`,
+    // animation: `$fadeInFromBottom 500ms`,
   },
   "@keyframes fadeIn": {
     "0%": {

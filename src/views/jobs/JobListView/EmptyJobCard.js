@@ -20,6 +20,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import StarIcon from '@material-ui/icons/Star';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -85,7 +86,7 @@ const ProductCard = ({ className, job, i, handlePriorityChangeToReg, handlePrior
           display="flex">
 
           <Box m={5}>
-            <PushPin />
+            <StarIcon />
           </Box>
           <Box
             display="flex"

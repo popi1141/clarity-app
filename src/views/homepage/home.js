@@ -79,11 +79,11 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: '20px'
     },
     meetTeamHeader: {
-        fontFamily: "Roboto Black",
+        fontFamily: "Roboto Medium",
         marginBottom: '40px'
     },
     teamName: {
-        fontFamily: "Roboto Black",
+        fontFamily: "Roboto Medium",
         color: "#6266EA",
         marginBottom: "1%"
     },
@@ -100,12 +100,12 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: '10%'
     },
       sectionHeader: {
-          fontFamily: "Roboto Black",
+          fontFamily: "Roboto Medium",
           marginBottom: '5%',
           lineHeight: '1.5'
       },
       endingHeader: {
-        fontFamily: "Roboto Black",
+        fontFamily: "Roboto Medium",
         marginBottom: '5%'
     },
     endingLogo: {
