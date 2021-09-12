@@ -477,8 +477,8 @@ const JobCard = ({
             justifyContent="flex-start"
             flexGrow={1}
             flexDirection="column"
-            onClick={open && editing ? () => handleSaveData() : () => handleExpandClick()}
-            style={{cursor: 'pointer'}}
+            style={open && editing ? null : {cursor: 'pointer'}}
+            onClick={open && editing ? null : () => handleExpandClick()}
           >
             {editing ?
               <Box
