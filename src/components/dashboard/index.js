@@ -11,6 +11,7 @@ import SettingsView from '../../views/settings/SettingsView';
 import NotFoundView from '../../views/errors/NotFoundView';
 import firebase from '@firebase/app';
 import JobFilter from '../../views/jobs/JobWithTags';
+import { useHistory } from "react-router-dom";
 import '@firebase/firestore'
 import '@firebase/auth';
 // import NavItem from './navBar/navItem';
@@ -117,6 +118,7 @@ const DashboardLayout = () => {
 
 
   const jobsEndRef = useRef(null)
+  const history = useHistory();
 
   const createNewCard = async (url) => {
     //var parsedURL = new URL(url);
@@ -152,25 +154,20 @@ const DashboardLayout = () => {
           newCard.id = docRef.id
           sethighPriorityJobs([...highPriorityJobs, newCard])
           //jobsEndRef.current.scrollIntoView({ behavior: "smooth" })
-          //setInitialEditability(false)
+          // setInitialEditability(true)
 
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
     }
+    if (window.location.pathname !== '/app/dashboard') {
+      history.push('/app/dashboard')
+    }
     // if (parsedURL.hostname === "www.indeed.com") {
     //   getAPIData(url).then(async function () {
-
-
-
     //   })
     // }
-
-
-
-
-
   }
 
   const [boards, setBoards] = useState([]);
@@ -230,33 +227,28 @@ const DashboardLayout = () => {
           cards.forEach((card) => {
             card.tags.forEach((tag) => {
               // console.log("boards: ", boards)
-              // console.log("tag: ", tag)
-              // console.log("tags: ", totalTags)
+              console.log("tag: ", tag)
+              console.log("tags: ", totalTags)
               const newBoard = {
                 href: '/app/dashboard/' + tag,
                 title: tag
               }
-              // if (!Object.values(boards).includes(tag)) {
-              //   setBoards(boards => [...boards, newBoard])
-              // }
 
               if (!totalTags.includes(tag)) {
-                console.log("new tags");
-                console.log("Tag: ", tag)
                 totalTags.push(tag)
-                // setTotalTags(totalTags => {...totalTags, {tag: true}});
-                const k = boards.filter(board => board.title !== tag)
-                let appendBoard = [...k, newBoard];
-                console.log("filtered boards: ", k)
-                console.log("changed boards", appendBoard)
-                console.log("original boards,", boards)
-                
                 setBoards(boards => [...boards.filter(board => board.title !== tag), newBoard]);
               }
-
               
-
-
+              // update the navItems after deleting tags from the card
+              setBoards(boards => [...boards.filter(
+                (board) => {
+                  return totalTags.some(
+                    (tag) => {
+                      return board.title === tag
+                    }
+                  )
+                }
+              )]);                  
             })
             console.log("card: ", card);
             if (card.priority) {
@@ -284,11 +276,6 @@ const DashboardLayout = () => {
   // }, [totalTags]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    console.log("every render: ")
-    console.log('Tags: ', totalTags)
-    console.log('highpriorityjobs: ', highPriorityJobs)
-    console.log('reg jobs: ', regPriorityJobs)
-    console.log("svaed: ", saved)
     getUserData();// eslint-disable-next-line
   }, [saved]) 
   return (

@@ -82,13 +82,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1, 1, 1, 1)
   },
   deadlineButtonClose: {
-    backgroundColor: theme.palette.highlight.pink,
+    backgroundColor: '#F4F4F4',
     borderRadius: '40px',
     height: '40px',
     marginRight: '2%',
     fontSize: '1rem',
-    padding: theme.spacing(1, 1.5, 1, 1.5),
-    color: 'white'
+    padding: theme.spacing(1, 1.5, 1, 1.5)
   },
   deadlineButtonNormal: {
     borderRadius: '40px',
@@ -199,6 +198,15 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.first,
     },
     textTransform: 'none',
+  },
+  placeHolder: {
+    color: '#6F6F6F',
+    fontSize: '18px',
+    marginBottom: theme.spacing(2)
+  },
+  tagBox: {
+    marginBottom: theme.spacing(3),
+    marginTop: theme.spacing(1)
   }
 }));
 
@@ -233,7 +241,7 @@ const JobCard = ({
     tags: '',
     jobDesc: 'No job description added',
     notes: 'No notes added',
-    initialEditability: false
+    initialEditability: true
   }
 
   useEffect(() => {
@@ -289,9 +297,11 @@ const JobCard = ({
   // toggle editing
   const [editing, toggleEditing] = useState(values.initialEditability)
   const handleEditingClick = () => {
+    console.log('editing status: ' + editing)
     toggleEditing(!editing)
     setOpen(true);
-
+    console.log('initialEditability: ' + values.initialEditability)
+    console.log('editing status: ' + editing)
   }
 
   // change priority
@@ -342,6 +352,18 @@ const JobCard = ({
     { value: 'N/A' },
 
   ]
+
+  // handle tag selection
+  const tagOptions = [
+    { value: 'Full Time' },
+    { value: 'Part Time' },
+    { value: 'Internship' },
+    { value: 'Unpaid Role' },
+    { value: 'Requires Relocation' },
+    { value: 'Remote' },
+    { value: 'Add Custom Tag' }
+  ]
+
   const handleInputChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -356,13 +378,10 @@ const JobCard = ({
   // }
 
   const handleDeadlineChange = (value) => {
-    // console.log("handleDeadline called");
     setValues({ ...values, deadline: value.toDate() })
   }
 
   const handlePostedDateChange = (value) => {
-    // console.log("handlePostDate called");
-
     setValues({ ...values, postedDate: value.toDate() })
   }
 
@@ -390,24 +409,65 @@ const JobCard = ({
   // handle category tags user input
   const [currentAddTag, setCurrAddMTag] = useState(null)
   const [showAddTagSelect, toggleAddTagMenu] = useState(false)
+  const [showAddTagInput, toggleAddTagInput] = useState(false)
 
   const handleTagChange = (event) => {
     setCurrAddMTag(event.target.value)
-
   }
   const handleTagAdd = (event) => {
-    var specificArrayInObject = values.tags;
-    specificArrayInObject.push(event.target.value);
-    let newObj = values;
-    newObj.tags = specificArrayInObject
-    setValues(newObj)
-    toggleAddTagMenu(!showAddTagSelect)
-    setCurrAddMTag('')
+    if (event.target.value === 'Add Custom Tag') {
+      toggleAddTagInput(!showAddTagInput)
+      toggleAddTagMenu(!showAddTagSelect)
+    } else if (tagOptions.some(e => e.value === event.target.value)) {
+      var specificArrayInObject = values.tags;
+      specificArrayInObject.push(event.target.value);
+      let newObj = values;
+      newObj.tags = specificArrayInObject
+      setValues(newObj)
+      toggleAddTagMenu(!showAddTagSelect)
+      setCurrAddMTag('')
+    } else {
+      specificArrayInObject = values.tags;
+      specificArrayInObject.push(event.target.value);
+      let newObj = values;
+      newObj.tags = specificArrayInObject
+      setValues(newObj)
+      setCurrAddMTag('')
+      toggleAddTagInput(!showAddTagInput)
+    }
   }
 
+  const handleTagDel = (item) => () => {
+    for(var i = 0; i < values.tags.length; i++) {
+      if(values.tags[i] === item) {
+          values.tags.splice(i, 1);
+          break;
+      }
+    }
+    setValues({...values, tags: values.tags});
+  };
+
+  const handleMaterialDel = (item) => () => {
+    for(var i = 0; i < values.appMaterial.length; i++) {
+      if(values.appMaterial[i] === item) {
+          values.appMaterial.splice(i, 1);
+          break;
+      }
+    }
+    setValues({...values, appMaterial: values.appMaterial});
+    console.log(values.appMaterial)
+  };
+
   const handleAddTagButtonClick = () => {
-    toggleAddTagMenu(!showAddTagSelect)
+    if (showAddTagSelect === false && showAddTagInput === false) {
+      toggleAddTagMenu(!showAddTagSelect)
+    } else if (showAddTagSelect === true) {
+      toggleAddTagMenu(!showAddTagSelect)
+    } else if (showAddTagInput === true) {
+      toggleAddTagInput(!showAddTagInput)
+    }
   }
+
 
   const handleSaveData = () => {
     const uid = localStorage.getItem("uid")
@@ -426,7 +486,14 @@ const JobCard = ({
     toggleEditing(false)
     setOpen(false);
 
-    //setInitialEditability(!initialEditability)
+    if (values.tags === undefined || values.tags.length === 0) {
+      toggleAddTagMenu(false)
+      toggleAddTagInput(false)
+    }
+
+    if (values.appMaterial === undefined || values.appMaterial.length === 0) {
+      toggleAddMaterialMenu(false)
+    }
   }
 
   const handleDeleteCard = () => {
@@ -632,7 +699,7 @@ const JobCard = ({
                     <DatePicker
                       disableToolbar
                       variant="inline"
-                      label="Due"
+                      label="Due Date"
                       value={values.deadline}
                       onChange={(newValue) => handleDeadlineChange(newValue)}
                       className={classes.datePicker}
@@ -677,18 +744,6 @@ const JobCard = ({
                           onChange={handleInputChange('url')}
                         />
                       </FormControl>
-                    {/* <Chip
-                      label="Job Post URL"
-                      component="a"
-                      href={values.url}
-                      clickable
-                      target="_blank"
-                      deleteIcon={<NavigateNextIcon />}
-                      onDelete={handleChipDelete}
-                      variant="outlined"
-                      className={classes.jobUrlButton}
-                    /> */}
-
                   </Grid>
 
                   :
@@ -697,9 +752,15 @@ const JobCard = ({
                     item
                   >
                     <Chip
-                      label={values.deadline && values.deadline !== '' ? 'Due: ' + values.deadline.toLocaleString('default', { month: 'short' }) + ' '
-                        + values.deadline.getDate() + ', ' + values.deadline.getFullYear() : 'Due: N/A'}
-                      className={calculateTimeDiff(values.deadline) < 5 ? classes.deadlineButtonClose : classes.deadlineButtonNormal}
+                      label=
+                      {values.deadline && values.deadline !== '' ? 
+                        'Due: ' + values.deadline.toLocaleString('default', { month: 'short' }) + ' '
+                        + values.deadline.getDate() + ', ' + values.deadline.getFullYear() 
+                      : 'Due: N/A'}
+                      className={
+                      values.deadline && values.deadline !== '' ?
+                      (calculateTimeDiff(values.deadline) < 5 ? classes.deadlineButtonClose : classes.deadlineButtonNormal)
+                      : classes.deadlineButtonNormal}
                     />
                     <Chip
                       label={values.postedDate && values.postedDate !== '' ? 'Posted ' + calculateTimeDiff(values.postedDate) + ' days ago'
@@ -728,61 +789,61 @@ const JobCard = ({
 
             </Box>
           </Box>
-          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleEditingClick()}>
-            {editing ? null : <CreateIcon style={{cursor: 'pointer'}} />}
-
-          </Box>
-          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" onClick={() => handleExpandClick()}>
-            {open && editing ? null : (open ? <ExpandLess style={{cursor: 'pointer'}}/> : <ExpandMore style={{cursor: 'pointer'}}/>)}
-          </Box>
-
-          <Box m={2} mt={5} mb={5} color="rgba(0, 0, 0, 0.6)" >
-            <DeleteIcon style={{cursor: 'pointer'}} onClick={() => handleDeleteModalShow()}/>
-            {deleteModalShow ? <Dialog open={deleteModalShow} onClose={handleClose} className={classes.dialog}>
-              {/* <form onSubmit={handleDeleteCard}> */}
-              <DialogTitle className={classes.dialogTitle}>
-                <Grid container spacing={20}>
-                  <Grid item md={10} xs={12}>
-                    <Typography align="left" gutterBottom variant="h5">
-                      Delete Card
-                      </Typography>
+          <Box pt={3} display="flex" flexDirection="row">
+            <Box color="rgba(0, 0, 0, 0.6)" onClick={() => handleEditingClick()}>
+              {editing ? null : <IconButton><CreateIcon style={{cursor: 'pointer'}} /></IconButton>}
+            </Box>
+            <Box color="rgba(0, 0, 0, 0.6)" onClick={() => handleExpandClick()}>
+              {open && editing ? null : (open ? <IconButton><ExpandLess style={{cursor: 'pointer'}}/></IconButton> : <IconButton><ExpandMore style={{cursor: 'pointer'}}/></IconButton>)}
+            </Box>
+            <Box color="rgba(0, 0, 0, 0.6)" >
+              <IconButton onClick={() => handleDeleteModalShow()}><DeleteIcon style={{cursor: 'pointer'}}/></IconButton>
+              {deleteModalShow ? <Dialog open={deleteModalShow} onClose={handleClose} className={classes.dialog}>
+                {/* <form onSubmit={handleDeleteCard}> */}
+                <DialogTitle className={classes.dialogTitle}>
+                  <Grid container spacing={20}>
+                    <Grid item md={10} xs={12}>
+                      <Typography align="left" gutterBottom variant="h5">
+                        Delete Card
+                        </Typography>
+                    </Grid>
+                    <Grid item md={2} xs={12}>
+                      <IconButton
+                        className={classes.closeIcon}
+                        onClick={handleClose}
+                        aria-label="close"
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                  <Grid item md={2} xs={12}>
-                    <IconButton
-                      className={classes.closeIcon}
-                      onClick={handleClose}
-                      aria-label="close"
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </DialogTitle>
-              <DialogContent className={classes.dialogContent}>
-                <Typography
-                >Are you sure you want to delete this card? </Typography>
-              </DialogContent>
-              <Divider/>
-              <DialogActions>
-                <Button
-                  className={classes.cancelButton}
-                  onClick={handleClose}
-                  variant="contained"
-                >
-                  Cancel
-            </Button>
-                <Button
-                  className={classes.deleteButton}
-                  type="submit"
-                  variant="contained"
-                  onClick={handleDeleteCard}
-                >
-                  Delete
-            </Button>
-              </DialogActions>
-              {/* </form> */}
-            </Dialog>
-              : null}
+                </DialogTitle>
+                <DialogContent className={classes.dialogContent}>
+                  <Typography
+                  >Are you sure you want to delete this card? </Typography>
+                </DialogContent>
+                <Divider/>
+                <DialogActions>
+                  <Button
+                    className={classes.cancelButton}
+                    onClick={handleClose}
+                    variant="contained"
+                  >
+                    Cancel
+              </Button>
+                  <Button
+                    className={classes.deleteButton}
+                    type="submit"
+                    variant="contained"
+                    onClick={handleDeleteCard}
+                  >
+                    Delete
+              </Button>
+                </DialogActions>
+                {/* </form> */}
+              </Dialog>
+                : null}
+            </Box>
           </Box>
         </Box>
 
@@ -802,27 +863,64 @@ const JobCard = ({
             flexDirection="column"
             flexGrow={1}
             mt={3}
-            mb={6}
+            mb={4}
           >
-
+          {editing ? 
+          null :
+          (
+            (values.appMaterial === undefined || values.appMaterial.length === 0) 
+            && (values.tags === undefined || values.tags.length === 0) 
+            && (values.jobDesc === null || values.jobDesc === '') 
+            && (values.notes === null || values.notes === '') ?
+            <Box>
+              <Typography className={classes.placeHolder}>There is nothing here. Edit the card to save detailed job information.</Typography>
+                <Button onClick={() => handleEditingClick()} className={classes.saveButton}>
+                  Edit Card
+                <CreateIcon />
+              </Button>
+            </Box>
+            :
+            null
+          )
+          }
+          {editing ? 
             <Typography
-              color="textPrimary"
-              gutterBottom
-              variant="h5"
-            >
+            color="textPrimary"
+            gutterBottom
+            variant="h5">
               Required Application Material
-          </Typography>
+            </Typography>
+          :
+          (values.appMaterial === undefined || values.appMaterial.length === 0 ?
+            null
+            :
+            <Typography
+            color="textPrimary"
+            gutterBottom
+            variant="h5">
+              Required Application Material
+            </Typography>)
+          }
             <Box
               display="flex"
               justifyContent="flex-start"
               alignItems="center"
-              mb={3}
-              mt={1}
+              className={
+                (!editing && (values.appMaterial === undefined || values.appMaterial.length === 0)) ?
+                null
+                :
+                classes.tagBox
+              }
             >
-              {values.appMaterial && values.appMaterial.map((item) => {
-                return (<Chip label={item} className={classes.customTag}></Chip>)
-              })}
-
+              {editing ? 
+                values.appMaterial && values.appMaterial.map((item) => {
+                  return (<Chip label={item} className={classes.customTag} onDelete={handleMaterialDel(item)}></Chip>)
+                })
+                :
+                values.appMaterial && values.appMaterial.map((item) => {
+                  return (<Chip label={item} className={classes.customTag}></Chip>)
+                })
+              }   
               {showAddMaterialSelect ?
                 <FormControl className={classes.formControl}>
                   <Select
@@ -843,28 +941,48 @@ const JobCard = ({
                 : null
               }
             </Box>
-
+            {editing ? 
             <Typography
+            color="textPrimary"
+            gutterBottom
+            variant="h5">
+              Category Tags
+            </Typography>
+            :
+            (values.tags === undefined || values.tags.length === 0 ?
+              null
+              :
+              <Typography
               color="textPrimary"
               gutterBottom
-              variant="h5"
-              mb={1}
-            >
-              Category Tags
-          </Typography>
+              variant="h5">
+                Category Tags
+              </Typography>)
+            }
+
             <Box
               display="flex"
               justifyContent="flex-start"
               alignItems="center"
-              mb={3}
-              mt={1}
+              className={
+                (!editing && (values.tags === undefined || values.tags.length === 0)) ?
+                null
+                :
+                classes.tagBox
+              }
             >
-              {values.tags && values.tags.map((item) => {
+              {editing ? 
+              values.tags && values.tags.map((item) => {
+                return (<Chip label={item} className={classes.customTag} onDelete={handleTagDel(item)}></Chip>)
+              })
+              :
+              values.tags && values.tags.map((item) => {
                 return (<Chip label={item} className={classes.customTag}></Chip>)
-              })}
-
-              {showAddTagSelect ?
-                <Tooltip title="Press Enter to save." classes={{tooltip: classes.tooltip}}>
+              })
+              }
+              {
+                showAddTagInput ? 
+                  <Tooltip title="Press Enter to save." classes={{tooltip: classes.tooltip}}>
                   <FormControl className={classes.formControl}>
                     <OutlinedInput
                       placeholder="Add a tag"
@@ -878,7 +996,21 @@ const JobCard = ({
                       onChange={handleTagChange}
                     />
                   </FormControl>
-                </Tooltip>
+                  </Tooltip>
+                  :
+                  null
+              }
+              {showAddTagSelect ?
+                <FormControl className={classes.formControl}>
+                  <Select
+                    value={currentAddTag}
+                    onChange={handleTagAdd}                  
+                  >
+                    {tagOptions.filter(item => !values.tags.includes(item.value)).map((item) => {
+                      return (<MenuItem value={item.value}>{item.value}</MenuItem>)
+                    })}
+                  </Select>
+                 </FormControl>
                 :
                 null
               }
@@ -892,13 +1024,25 @@ const JobCard = ({
                 justifyContent="flex-start"
                 flexDirection="column"
               >
+              {editing ? 
               <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h5">
+                Job Descriptions
+              </Typography>
+              :
+              (values.jobDesc === null || values.jobDesc === '' ?
+                null
+                :
+                <Typography
                 color="textPrimary"
                 gutterBottom
-                variant="h5"
-              >
-                Job Description
-              </Typography>
+                variant="h5">
+                  Job Descriptions
+                </Typography>
+              )
+              }
               {editing ?
                 <FormControl>
                   <TextField
@@ -911,88 +1055,44 @@ const JobCard = ({
                   />
                 </FormControl>
                   :
-                  <TextField
-                    inputProps={
-                    { 
-                      readOnly: true, 
-                    }
-                    }
+                  (values.jobDesc === null || values.jobDesc === '' ?
+                    null
+                    :
+                    <TextField
+                    inputProps={{readOnly: true}}
                     placeHolder={defaultValues.jobDesc}
                     defaultValue={values.jobDesc}
                     multiline
                     variant="outlined"
-                    className={classes.jobDesc}
+                    className={classes.notes}
                   />
+                  )
                 }
-                {/* <Box
-                  border={1}
-                  className={classes.editFields}
-                >
-                  {editing ?
-                    <MUIRichTextEditor
-                      label="Add Job Descriptions here..."
-                      defaultValue={values.jobDesc}
-                      controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo", "redo", "link", "media", "numberList", "bulletList"]}
-                      onChange={
-                            (value) => {
-                              let result = JSON.stringify(
-                                    convertToRaw(value.getCurrentContent())
-                                  );
-                              console.log("value: ", result);
-                              console.log("changed");
-                              handleEditorChange(result);
-
-                            }
-                      }
-                    />
-                      :
-                      <MUIRichTextEditor
-                      label="No Job Descriptions Added"
-                      defaultValue={values.jobDesc}
-                      readOnly={true}
-                      toolbar={false}
-                    />
-                  }
-                </Box> */}
               </Box>
+              {editing ? 
+              <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h5">
+                Notes
+              </Typography>
+              :
+              (values.notes === null || values.notes === '' ?
+                null
+                :
+                <Typography
+                color="textPrimary"
+                gutterBottom
+                variant="h5">
+                  Notes
+                </Typography>
+              )
+              }
               <Box
                 display="flex"
                 justifyContent="flex-start"
                 flexDirection="column"
-                marginTop="24px"
               >
-              <Typography
-                color="textPrimary"
-                gutterBottom
-                variant="h5"
-              >
-                Notes
-              </Typography>
-              {/* <Box
-                border={1}
-                className={classes.editFields}
-              >
-                {editing ?
-                  <MUIRichTextEditor
-                    label="Add your notes here..."
-                    defaultValue={values.notes}
-                    controls={["title", "bold", "italic", "underline", "strikethrough", "highlight", "undo", "redo", "link", "media", "numberList", "bulletList"]}
-                    onChange={value => {
-                      const notes = JSON.stringify(
-                        convertToRaw(value.getCurrentContent())
-                      );
-                      handleEditorChange(notes);
-                    }}
-                  />
-                    :
-                    <MUIRichTextEditor
-                    label="No Notes Added"
-                    defaultValue={values.notes}
-                    readOnly={true}
-                    toolbar={false}
-                  />
-                }
-              </Box> */}
               {editing ?
                 <FormControl>
                   <TextField
@@ -1005,18 +1105,17 @@ const JobCard = ({
                   />
                 </FormControl>
                   :
-                  <TextField
-                    inputProps={
-                    { 
-                      readOnly: true, 
-                    }
-                    }
+                  (values.notes === null || values.notes === '' ?
+                    null :
+                    <TextField
+                    className={classes.notes}
+                    inputProps={{readOnly: true}}
                     placeholder={defaultValues.notes}
                     defaultValue={values.notes}
                     multiline
                     variant="outlined"
-                    className={classes.notes}
-                  />
+                    />
+                  )
                 }
               </Box>
           </Box>
@@ -1031,21 +1130,36 @@ const JobCard = ({
               display="flex"
               justifyContent="flex-start"
               flexDirection="column"
-
               flexGrow={1}
-            >
-
-            </Box>
-
-            <Button onClick={handleSaveData} className={classes.saveButton}>
+            ></Box>
+            {
+              editing ? 
+                <Button onClick={handleSaveData} className={classes.saveButton}>
+                <Typography
+                  color="white"
+                  display="inline"
+                  variant="h5"
+                >
+                  Save
+                </Typography>
+              </Button>
+              :
+              (values.appMaterial === undefined || values.appMaterial.length === 0) 
+              && (values.tags === undefined || values.tags.length === 0) 
+              && (values.jobDesc === null || values.jobDesc === '') 
+              && (values.notes === null || values.notes === '') ?
+              null
+              :
+              (<Button onClick={handleExpandClick} className={classes.saveButton}>
               <Typography
                 color="white"
                 display="inline"
-                variant="h5"
-              >
-                Save
-          </Typography>
-            </Button>
+                variant="h5">
+                Close
+              </Typography>
+              </Button>
+              )
+            }
           </Box>
         </Box>
       </Collapse>

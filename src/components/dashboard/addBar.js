@@ -61,6 +61,11 @@ const AddBar = ({createNewCard},) => {
         <TextInput type="text" style={styles.input}
           placeholder="Input a Job Posting URL to Save...."
           value={url}
+          onKeyPress={(ev) => {
+            if (ev.key === 'Enter') {
+              createNewCard(url)
+            }
+          }}
           onChange={handleURLChange}
         />
         <Button type="button" className={classes.addButton} onClick={() => createNewCard(url)}>

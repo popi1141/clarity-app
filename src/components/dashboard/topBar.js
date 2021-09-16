@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import InputIcon from '@material-ui/icons/Input';
-import SearchIcon from '@material-ui/icons/Search';
 import AddBar from './addBar.js';
 
 const useStyles = makeStyles((theme) => ({
@@ -68,9 +67,6 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton> */}
-          <IconButton color="inherit">
-              <SearchIcon className={classes.searchIcon}/>
-          </IconButton>
           <Avatar
             className={classes.avatar}
             component={RouterLink}

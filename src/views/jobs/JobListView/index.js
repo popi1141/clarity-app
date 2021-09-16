@@ -113,23 +113,18 @@ const JobListView = forwardRef((
     handleSaveChanged
   } = props;
 
-  
-  // console.log("updatePriorityList: ", updatePriorityLists);
-  // console.log("getUserData: ", getUserData);
-  // console.log("high priority jobs: ", highPriorityJobs);
-  // console.log("reg jobs: ", regPriorityJobs);
   const [sortByValue, setSortByValue] = useState(null);
 
   const sortByOptions = [
     { value: 'Posted Date' },
-    { value: 'Deadline' },
+    { value: 'Due Date' },
+    { value: 'Location' },
+    { value: 'Job Title' }
   ]
 
   const handleSort = (prop) => (event) => {
     setSortByValue(event.target.value)
-    if (event.target.value === "Deadline") {
-      // console.log("reg Jobs: ", regPriorityJobs);
-      // console.log("high Jobs: ", highPriorityJobs);
+    if (event.target.value === "Due Date") {
       regPriorityJobs.sort(function (a, b) {
         if (!a.deadline || !b.deadline) {
           return true;
@@ -159,6 +154,28 @@ const JobListView = forwardRef((
         } else {
           return b.postedDate.toDate() - a.postedDate.toDate();
         }
+      });
+    } else if (event.target.value === "Location") {
+      regPriorityJobs.sort(function (a, b) {
+        if(a.location < b.location) { return -1; }
+        if(a.location > b.location) { return 1; }
+        return 0;
+      });
+      highPriorityJobs.sort(function (a, b) {
+        if(a.location < b.location) { return -1; }
+        if(a.location > b.location) { return 1; }
+        return 0;
+      });
+    } else if (event.target.value === "Job Title") {
+      regPriorityJobs.sort(function (a, b) {
+        if(a.title < b.title) { return -1; }
+        if(a.title > b.title) { return 1; }
+        return 0;
+      });
+      highPriorityJobs.sort(function (a, b) {
+        if(a.title < b.title) { return -1; }
+        if(a.title > b.title) { return 1; }
+        return 0;
       });
     }
     sethighPriorityJobs(highPriorityJobs)

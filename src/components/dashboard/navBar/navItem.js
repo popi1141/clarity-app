@@ -59,7 +59,7 @@ const NavItem = ({
   const classes = useStyles();
   const path = usePath();
   console.log("nav item path: ", path)
-  console.log("/app/dashboard/" + title)
+  // console.log("/app/dashboard/" + title)
 
   return (
     <ListItem
