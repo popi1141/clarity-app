@@ -164,10 +164,7 @@ const DashboardLayout = () => {
     if (window.location.pathname !== '/app/dashboard') {
       history.push('/app/dashboard')
     }
-    // if (parsedURL.hostname === "www.indeed.com") {
-    //   getAPIData(url).then(async function () {
-    //   })
-    // }
+
   }
 
   const [boards, setBoards] = useState([]);

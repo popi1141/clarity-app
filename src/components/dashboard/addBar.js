@@ -10,7 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    minWidth: '100%',
+    width: '85%',
     height: theme.spacing(6)
   },
   addButton: {
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     '&:hover': {
       backgroundColor: theme.palette.primary.first,
-
     }
   },
 }))
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const AddBar = ({createNewCard},) => {
+const AddBar = ({createNewCard, handleAddButton},) => {
   const classes = useStyles()
   const [url, setURL] = useState(null)
 
@@ -61,14 +60,21 @@ const AddBar = ({createNewCard},) => {
         <TextInput type="text" style={styles.input}
           placeholder="Input a Job Posting URL to Save...."
           value={url}
+          autoFocus={true}
           onKeyPress={(ev) => {
             if (ev.key === 'Enter') {
+              ev.preventDefault();
               createNewCard(url)
+              handleAddButton()
             }
           }}
           onChange={handleURLChange}
         />
-        <Button type="button" className={classes.addButton} onClick={() => createNewCard(url)}>
+        <Button type="button" className={classes.addButton} onClick={() => {
+          createNewCard(url)
+          handleAddButton()
+          }
+        }>
           <AddIcon className={classes.addIcon}></AddIcon>
           <Typography>Save</Typography>
         </Button>

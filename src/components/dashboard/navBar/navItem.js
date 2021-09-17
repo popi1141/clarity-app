@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   title: {
-    marginRight: 'auto'
+    marginRight: 'auto',
+    maxWidth: '100px'
   },
   navItem: {
     color: theme.palette.black,
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none',
     fontSize: '1rem',
     justifyContent: 'left',
-    lineHeight: '0.7'
+    lineHeight: '1'
   },
   check: {
     opacity: '0'
@@ -44,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none',
     width: '160px',
     fontWeight: '700',
-    lineHeight: '0.7',
-    justifyContent: 'left'
+    lineHeight: '1',
+    justifyContent: 'left',
   }
 }));
 

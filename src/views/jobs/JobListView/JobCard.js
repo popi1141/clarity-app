@@ -790,11 +790,11 @@ const JobCard = ({
             </Box>
           </Box>
           <Box pt={3} display="flex" flexDirection="row">
-            <Box color="rgba(0, 0, 0, 0.6)" onClick={() => handleEditingClick()}>
-              {editing ? null : <IconButton><CreateIcon style={{cursor: 'pointer'}} /></IconButton>}
+            <Box color="rgba(0, 0, 0, 0.6)">
+              {editing ? null : <IconButton onClick={() => handleEditingClick()}><CreateIcon style={{cursor: 'pointer'}} /></IconButton>}
             </Box>
-            <Box color="rgba(0, 0, 0, 0.6)" onClick={() => handleExpandClick()}>
-              {open && editing ? null : (open ? <IconButton><ExpandLess style={{cursor: 'pointer'}}/></IconButton> : <IconButton><ExpandMore style={{cursor: 'pointer'}}/></IconButton>)}
+            <Box color="rgba(0, 0, 0, 0.6)">
+              {open && editing ? null : (open ? <IconButton onClick={() => handleExpandClick()}><ExpandLess style={{cursor: 'pointer'}}/></IconButton> : <IconButton><ExpandMore style={{cursor: 'pointer'}}/></IconButton>)}
             </Box>
             <Box color="rgba(0, 0, 0, 0.6)" >
               <IconButton onClick={() => handleDeleteModalShow()}><DeleteIcon style={{cursor: 'pointer'}}/></IconButton>
@@ -873,7 +873,7 @@ const JobCard = ({
             && (values.jobDesc === null || values.jobDesc === '') 
             && (values.notes === null || values.notes === '') ?
             <Box>
-              <Typography className={classes.placeHolder}>There is nothing here. Edit the card to save detailed job information.</Typography>
+              <Typography className={classes.placeHolder}>There is nothing down here. Edit the card to input detailed job information.</Typography>
                 <Button onClick={() => handleEditingClick()} className={classes.saveButton}>
                   Edit Card
                 <CreateIcon />
