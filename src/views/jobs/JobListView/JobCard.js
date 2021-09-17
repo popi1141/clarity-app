@@ -794,7 +794,8 @@ const JobCard = ({
               {editing ? null : <IconButton onClick={() => handleEditingClick()}><CreateIcon style={{cursor: 'pointer'}} /></IconButton>}
             </Box>
             <Box color="rgba(0, 0, 0, 0.6)">
-              {open && editing ? null : (open ? <IconButton onClick={() => handleExpandClick()}><ExpandLess style={{cursor: 'pointer'}}/></IconButton> : <IconButton><ExpandMore style={{cursor: 'pointer'}}/></IconButton>)}
+              {open && editing ? null : (open ? <IconButton onClick={() => handleExpandClick()}><ExpandLess style={{cursor: 'pointer'}}/></IconButton >
+               : <IconButton onClick={() => handleExpandClick()}><ExpandMore style={{cursor: 'pointer'}}/></IconButton>)}
             </Box>
             <Box color="rgba(0, 0, 0, 0.6)" >
               <IconButton onClick={() => handleDeleteModalShow()}><DeleteIcon style={{cursor: 'pointer'}}/></IconButton>
