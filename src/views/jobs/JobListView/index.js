@@ -12,7 +12,9 @@ import {
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 // import { Pagination } from '@material-ui/lab';
 import Page from '../../../components/page/Page.js';
-import JobCard from './JobCard';
+// import JobCard from './JobCard';
+import JobCard2 from './JobCard2';
+
 import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -237,7 +239,7 @@ const JobListView = forwardRef((
         </Box> */}
         <Box mt={3} mb={6}>
           {!tag ? highPriorityJobs.map((job, i) => {
-            return (<JobCard
+            return (<JobCard2
               className={classes.highJobCard}
               key={job.id}
               job={job}
@@ -248,7 +250,7 @@ const JobListView = forwardRef((
               handleSaveChanged={handleSaveChanged}
             />)
           }) : highPriorityJobs.filter(highPriorityJobs => highPriorityJobs.tags.includes(tag)).map((job, i) => {
-            return (<JobCard
+            return (<JobCard2
               className={classes.highJobCard}
               key={job.id}
               job={job}
@@ -272,7 +274,7 @@ const JobListView = forwardRef((
 
         <Box mt={3} mb={6} >
           {!tag ? regPriorityJobs.map((job, i) => (
-            <JobCard
+            <JobCard2
               className={classes.regJobCard}
               key={job.id}
               job={job}
@@ -286,7 +288,7 @@ const JobListView = forwardRef((
             />
           )) : 
           regPriorityJobs.filter(regPriorityJobs => regPriorityJobs.tags.includes(tag)).map((job, i) => (
-            <JobCard
+            <JobCard2
               className={classes.regJobCard}
               key={job.id}
               job={job}
