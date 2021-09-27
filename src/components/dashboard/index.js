@@ -164,7 +164,6 @@ const DashboardLayout = () => {
     if (window.location.pathname !== '/app/dashboard') {
       history.push('/app/dashboard')
     }
-
   }
 
   const [boards, setBoards] = useState([]);

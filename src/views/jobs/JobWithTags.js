@@ -19,7 +19,7 @@ const JobFilter = ({
     setregPriorityJobs,
     ref,
     getUserData,
-    handleSaveChanged
+    handleSaveChanged,
     }) => {
     let {path} = useRouteMatch();
 

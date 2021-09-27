@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     borderTopLeftRadius: '50px',
     backgroundColor: theme.palette.background.dark,
-    minHeight: '100%',
+    minHeight: 'calc(100vh - 120px)',
     paddingTop: theme.spacing(7),
     paddingBottom: theme.spacing(2),
     paddingLeft: theme.spacing(4),
@@ -112,7 +112,7 @@ const JobListView = forwardRef((
     setregPriorityJobs,
     sethighPriorityJobs,
     getUserData,
-    handleSaveChanged
+    handleSaveChanged,
   } = props;
 
   const [sortByValue, setSortByValue] = useState(null);
@@ -196,7 +196,6 @@ const JobListView = forwardRef((
             <FormControl variant="outlined" className={classes.sortByForm}>
               <MuiThemeProvider theme={theme}>
                 <InputLabel htmlFor="outlined-sort-by" className={classes.sortByLabel}>Sort By</InputLabel>
-
                 <Select
                   className={classes.selectDropdown}
                   value={sortByValue}
@@ -215,14 +214,13 @@ const JobListView = forwardRef((
             </FormControl>
           </Box>
         </Box>
-
         <Typography
-          align="left"
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
+        align="left"
+        color="textPrimary"
+        gutterBottom
+        variant="h3"
         >
-          High Priority
+        High Priority
         </Typography>
 
         {/* <Box mt={3} mb={6}>
@@ -262,7 +260,6 @@ const JobListView = forwardRef((
             />)
           })}
         </Box>
-
         <Typography
           align="left"
           color="textPrimary"
@@ -309,12 +306,6 @@ const JobListView = forwardRef((
           display="flex"
           justifyContent="center"
         >
-          {/* <Pagination
-
-            color="primary"
-            count={3}
-            size="small"
-          /> */}
         </Box>
         <Container className={classes.extender} />
       </Container>
