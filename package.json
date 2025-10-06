@@ -25,6 +25,7 @@
     "node-html-parser": "^3.2.0",
     "nodejs-web-scraper": "^5.0.0",
     "prop-types": "^15.6.2",
+    "next": "^12.3.4",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^17.0.1",
@@ -37,17 +38,15 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0",
-    "react-scripts": "^4.0.1",
     "react-trello": "^2.2.10",
     "reactfire": "^3.0.0-rc.0",
     "request-promise": "^4.2.6",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "eslintConfig": {
     "extends": [
